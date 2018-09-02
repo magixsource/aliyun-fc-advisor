@@ -97,7 +97,7 @@
                         <descriptorRefs>
                             <descriptorRef>jar-with-dependencies</descriptorRef>
                         </descriptorRefs>
-                        <appendAssemblyId>false
+                        <appendAssemblyId>true
                         </appendAssemblyId> <!-- this is used for not append id to the jar name -->
                     </configuration>
                     <executions>

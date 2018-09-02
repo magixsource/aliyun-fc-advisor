@@ -6,7 +6,8 @@ import com.aliyun.fc.runtime.Context;
 import com.aliyun.fc.runtime.Credentials;
 import com.aliyun.fc.runtime.FunctionComputeLogger;
 import com.aliyun.fc.runtime.FunctionParam;
-import gl.linpeng.gf.base.JsonDTO;
+import gl.linpeng.serverless.advisor.controller.request.IdQueryRequest;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -45,10 +46,10 @@ public class DiseaseControllerTest {
                 return null;
             }
         };
-        JsonDTO jsonDTO = new JsonDTO();
-        jsonDTO.setContent(content);
-        Object result = diseaseController.handleRequest(jsonDTO, ctx);
 
+        IdQueryRequest idQueryRequest = JSON.parseObject(content,IdQueryRequest.class);
+        Object result = diseaseController.handleRequest(idQueryRequest, ctx);
+        Assert.assertNotNull(result);
         System.out.println(JSON.toJSONString(result, true));
     }
 }

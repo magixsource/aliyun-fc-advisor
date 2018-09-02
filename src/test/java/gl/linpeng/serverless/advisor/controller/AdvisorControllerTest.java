@@ -6,7 +6,8 @@ import com.aliyun.fc.runtime.Context;
 import com.aliyun.fc.runtime.Credentials;
 import com.aliyun.fc.runtime.FunctionComputeLogger;
 import com.aliyun.fc.runtime.FunctionParam;
-import gl.linpeng.gf.base.JsonDTO;
+import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -45,10 +46,9 @@ public class AdvisorControllerTest {
                 return null;
             }
         };
-        JsonDTO jsonDTO = new JsonDTO();
-        jsonDTO.setContent(content);
-        Object result = advisorController.handleRequest(jsonDTO, ctx);
-
+        BaseQueryRequest request = JSON.parseObject(content, BaseQueryRequest.class);
+        Object result = advisorController.handleRequest(request, ctx);
+        Assert.assertNotNull(result);
         System.out.println(JSON.toJSONString(result, true));
     }
 }
