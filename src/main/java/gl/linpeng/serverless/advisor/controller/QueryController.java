@@ -60,9 +60,9 @@ public class QueryController extends FunctionController<JsonDTO> implements Pojo
         Integer pageSize = Strings.isNullOrEmpty(pageSizeStr) ? 10 : Integer.valueOf(pageSizeStr.trim());
         Integer page = Strings.isNullOrEmpty(pageStr) ? 1 : Integer.valueOf(pageStr.trim());
         PageInfo pageInfo = healthQueryApi.query(q, type, pageSize, page);
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("payload", pageInfo);
-        PayloadResponse response = new PayloadResponse("success", payload);
+//        Map<String, Object> payload = new HashMap<>();
+//        payload.put("payload", pageInfo);
+        PayloadResponse response = new PayloadResponse("success", pageInfo.toMap());
         return new ServerlessResponse.Builder().setObjectBody(response).build();
     }
 

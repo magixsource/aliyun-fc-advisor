@@ -59,9 +59,7 @@ public class IngredientController extends FunctionController<JsonDTO> implements
 
         Long id = Long.valueOf(requestBody.get("id"));
         Ingredient ingredient = healthQueryApi.getIngredientById(id);
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("payload", ingredient);
-        PayloadResponse response = new PayloadResponse("success", payload);
+        PayloadResponse response = new PayloadResponse("success", ingredient.toMap());
         return new ServerlessResponse.Builder().setObjectBody(response).build();
     }
 

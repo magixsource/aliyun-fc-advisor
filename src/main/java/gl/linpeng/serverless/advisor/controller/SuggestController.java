@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -54,9 +53,8 @@ public class SuggestController extends FunctionController<JsonDTO> implements Po
 
         String q = requestBody.get("q").trim();
         PageInfo pageInfo = healthQueryApi.getQuerySuggests(q, 10, 1);
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("payload", pageInfo);
-        PayloadResponse response = new PayloadResponse("success", payload);
+
+        PayloadResponse response = new PayloadResponse("success", pageInfo.toMap());
         return new ServerlessResponse.Builder().setObjectBody(response).build();
     }
 

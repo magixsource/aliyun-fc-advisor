@@ -32,7 +32,7 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
         Connection connection = Base.connection();
         List list = new ArrayList();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(page(sql, pageSize, page));
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null) {
                 while (resultSet.next()) {
@@ -98,10 +98,12 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
 
     private void getAdvisesByType(String type, Long id, Integer pageSize, Integer page, String sql, Integer adverb, List list, PageInfo pageInfo, Connection connection) throws SQLException {
         boolean isDiseaseType = false;
-
+        String retType = null;
         if ("f".equalsIgnoreCase(type)) {
+            retType = "d";
         } else if ("d".equalsIgnoreCase(type)) {
             isDiseaseType = true;
+            retType = "f";
         } else {
             throw new UnsupportedOperationException("unsupported adviseType. " + type);
         }
@@ -133,9 +135,10 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
                 String targetName = resultSet.getString("target_name");
                 model.set("id", targetId);
                 model.set("name", targetName);
-//                model.set("type", "d");
-//                model.set("adverb", resultSet.getInt("adverb"));
-                list.add(model);
+                Map map = model.toMap();
+                map.put("type", retType);
+                map.put("adverb", resultSet.getInt("adverb"));
+                list.add(map);
             }
         }
         pageInfo.setTotal(total);
@@ -146,6 +149,6 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
     }
 
     private String page(String sql, Integer pageSize, Integer page) {
-        return sql + " limit " + pageSize + " offset " + ((page - 1) * pageSize + 1);
+        return sql + " limit " + pageSize + " offset " + ((page - 1) * pageSize);
     }
 }

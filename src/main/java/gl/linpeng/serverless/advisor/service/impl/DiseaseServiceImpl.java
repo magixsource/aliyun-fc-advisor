@@ -4,9 +4,11 @@ import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.serverless.advisor.model.Disease;
 import gl.linpeng.serverless.advisor.service.DiseaseService;
 import org.javalite.activejdbc.Base;
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Paginator;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lin.peng
@@ -28,12 +30,15 @@ public class DiseaseServiceImpl implements DiseaseService {
         Paginator p = new Paginator(Disease.class, pageSize, "name like ?", "%" + query + "%").orderBy("name desc");
         List<Disease> list = p.getPage(page);
         PageInfo pageInfo = new PageInfo();
-        pageInfo.setList(list);
+        List<Map<String, Object>> mapList = ((LazyList<Disease>) list).toMaps();
+        mapList.forEach(e -> {
+            e.put("type", "d");
+        });
+        pageInfo.setList(mapList);
         pageInfo.setTotal(p.getCount());
         pageInfo.setPageSize(pageSize);
         pageInfo.setPage(page);
-        // lazy list here,so do not close connection right now
-        // Base.close();
+        Base.close();
         return pageInfo;
     }
 }

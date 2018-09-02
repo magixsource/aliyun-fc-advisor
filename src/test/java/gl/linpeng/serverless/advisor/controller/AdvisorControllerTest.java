@@ -23,7 +23,7 @@ public class AdvisorControllerTest {
 
     @Test
     public void testGetAdvises() throws IOException {
-        String content = "{\"id\":\"4\",\"type\":\"d\",\"filter\":\"m\"}";
+        String content = "{\"id\":\"1\",\"type\":\"d\",\"filter\":\"m\"}";
         Context ctx = new Context() {
             @Override
             public String getRequestId() {

@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -59,9 +58,7 @@ public class DiseaseController extends FunctionController<JsonDTO> implements Po
 
         Long id = Long.valueOf(requestBody.get("id"));
         Disease disease = healthQueryApi.getDiseaseById(id);
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("payload", disease);
-        PayloadResponse response = new PayloadResponse("success", payload);
+        PayloadResponse response = new PayloadResponse("success", disease.toMap());
         return new ServerlessResponse.Builder().setObjectBody(response).build();
     }
 

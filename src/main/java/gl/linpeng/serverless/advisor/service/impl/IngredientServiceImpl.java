@@ -5,9 +5,11 @@ import gl.linpeng.serverless.advisor.model.Disease;
 import gl.linpeng.serverless.advisor.model.Ingredient;
 import gl.linpeng.serverless.advisor.service.IngredientService;
 import org.javalite.activejdbc.Base;
+import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Paginator;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Ingredient service implement
@@ -31,11 +33,15 @@ public class IngredientServiceImpl implements IngredientService {
         Paginator p = new Paginator(Ingredient.class, pageSize, "name like ?", "%" + query + "%").orderBy("name desc");
         List<Disease> list = p.getPage(page);
         PageInfo pageInfo = new PageInfo();
-        pageInfo.setList(list);
+        List<Map<String, Object>> mapList = ((LazyList<Disease>) list).toMaps();
+        mapList.forEach(e -> {
+            e.put("type", "f");
+        });
+        pageInfo.setList(mapList);
         pageInfo.setTotal(p.getCount());
         pageInfo.setPageSize(pageSize);
         pageInfo.setPage(page);
-//        Base.close();
+        Base.close();
         return pageInfo;
     }
 }
