@@ -7,7 +7,6 @@ import com.google.common.base.Strings;
 import com.google.inject.Injector;
 import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.gf.base.PayloadResponse;
-import gl.linpeng.gf.base.ServerlessResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
 import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
@@ -25,7 +24,7 @@ import java.util.Map;
  * @author lin.peng
  * @since 1.0
  **/
-public class AdvisorController extends FunctionController<BaseQueryRequest> implements PojoRequestHandler<BaseQueryRequest, ServerlessResponse> {
+public class AdvisorController extends FunctionController<BaseQueryRequest, PayloadResponse> implements PojoRequestHandler<BaseQueryRequest, PayloadResponse> {
     private static final Logger logger = LoggerFactory.getLogger(AdvisorController.class);
     private Injector injector;
 
@@ -33,13 +32,13 @@ public class AdvisorController extends FunctionController<BaseQueryRequest> impl
     private HealthQueryApi healthQueryApi;
 
     @Override
-    public ServerlessResponse handleRequest(BaseQueryRequest jsonDTO, Context context) {
+    public PayloadResponse handleRequest(BaseQueryRequest jsonDTO, Context context) {
         getFunction().getFunctionContext().put("ctx", context);
         return handler(jsonDTO);
     }
 
     @Override
-    public ServerlessResponse internalHandle(BaseQueryRequest jsonDTO) {
+    public PayloadResponse internalHandle(BaseQueryRequest jsonDTO) {
         // validate content
         if (jsonDTO == null || jsonDTO.getId() == null || Strings.isNullOrEmpty(jsonDTO.getType()) || Strings.isNullOrEmpty(jsonDTO.getFilter())) {
             logger.error("bad request {}", JSON.toJSONString(jsonDTO));

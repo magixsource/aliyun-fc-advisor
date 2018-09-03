@@ -24,7 +24,7 @@ public class IngredientControllerTest {
 
     @Test
     public void testGetIngredient() throws IOException {
-        String content = "{\"id\":\"7\"}";
+        String content = "{\"id\":\"5\"}";
         Context ctx = new Context() {
             @Override
             public String getRequestId() {

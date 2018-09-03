@@ -5,7 +5,6 @@ import com.aliyun.fc.runtime.Context;
 import com.aliyun.fc.runtime.PojoRequestHandler;
 import com.google.inject.Injector;
 import gl.linpeng.gf.base.PayloadResponse;
-import gl.linpeng.gf.base.ServerlessResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
 import gl.linpeng.serverless.advisor.controller.request.IdQueryRequest;
@@ -22,7 +21,7 @@ import javax.inject.Inject;
  * @author lin.peng
  * @since 1.0
  **/
-public class DiseaseController extends FunctionController<IdQueryRequest> implements PojoRequestHandler<IdQueryRequest, ServerlessResponse> {
+public class DiseaseController extends FunctionController<IdQueryRequest, PayloadResponse> implements PojoRequestHandler<IdQueryRequest, PayloadResponse> {
     private static final Logger logger = LoggerFactory.getLogger(DiseaseController.class);
     private Injector injector;
 
@@ -31,13 +30,13 @@ public class DiseaseController extends FunctionController<IdQueryRequest> implem
 
 
     @Override
-    public ServerlessResponse handleRequest(IdQueryRequest idQueryRequest, Context context) {
+    public PayloadResponse handleRequest(IdQueryRequest idQueryRequest, Context context) {
         getFunction().getFunctionContext().put("ctx", context);
         return handler(idQueryRequest);
     }
 
     @Override
-    public ServerlessResponse internalHandle(IdQueryRequest jsonDTO) {
+    public PayloadResponse internalHandle(IdQueryRequest jsonDTO) {
         // validate content
         if (jsonDTO == null) {
             logger.error("bad request {}", JSON.toJSONString(jsonDTO));
