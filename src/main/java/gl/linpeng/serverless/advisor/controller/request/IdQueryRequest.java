@@ -1,7 +1,5 @@
 package gl.linpeng.serverless.advisor.controller.request;
 
-import gl.linpeng.gf.base.ServerlessRequest;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -9,7 +7,7 @@ import javax.validation.constraints.NotNull;
  * @author lin.peng
  * @since 1.0
  **/
-public class IdQueryRequest extends ServerlessRequest {
+public class IdQueryRequest {
 
     @NotNull
     @Min(1)

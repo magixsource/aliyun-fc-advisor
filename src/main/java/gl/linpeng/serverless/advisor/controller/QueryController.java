@@ -7,6 +7,10 @@ import com.google.common.base.Strings;
 import com.google.inject.Injector;
 import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.gf.base.PayloadResponse;
+import gl.linpeng.gf.base.ServerlessRequest;
+import gl.linpeng.gf.base.ServerlessResponse;
+import gl.linpeng.gf.base.api.ApiRequest;
+import gl.linpeng.gf.base.api.ApiResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
 import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
@@ -22,7 +26,7 @@ import javax.inject.Inject;
  * @author lin.peng
  * @since 1.0
  **/
-public class QueryController extends FunctionController<BaseQueryRequest, PayloadResponse> implements PojoRequestHandler<BaseQueryRequest, PayloadResponse> {
+public class QueryController extends FunctionController<BaseQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<ApiRequest, ApiResponse> {
     private static final Logger logger = LoggerFactory.getLogger(QueryController.class);
     private Injector injector;
 
@@ -31,13 +35,17 @@ public class QueryController extends FunctionController<BaseQueryRequest, Payloa
 
 
     @Override
-    public PayloadResponse handleRequest(BaseQueryRequest jsonDTO, Context context) {
+    public ApiResponse handleRequest(ApiRequest apiRequest, Context context) {
+        logger.debug("recieve api request {}", JSON.toJSONString(apiRequest));
         getFunction().getFunctionContext().put("ctx", context);
-        return handler(jsonDTO);
+        ServerlessRequest serverlessRequest = new ServerlessRequest(apiRequest);
+        ServerlessResponse serverlessResponse = handler(serverlessRequest);
+        ApiResponse apiResponse = new ApiResponse(serverlessResponse);
+        return apiResponse;
     }
 
     @Override
-    public PayloadResponse internalHandle(BaseQueryRequest jsonDTO) {
+    public ServerlessResponse internalHandle(BaseQueryRequest jsonDTO) {
         // validate content
         if (jsonDTO == null || Strings.isNullOrEmpty(jsonDTO.getQ()) || jsonDTO.getType() == null || Strings.isNullOrEmpty(jsonDTO.getType())) {
             logger.error("bad request {}", JSON.toJSONString(jsonDTO));
@@ -53,7 +61,7 @@ public class QueryController extends FunctionController<BaseQueryRequest, Payloa
         Integer page = jsonDTO.getPage() == null ? 1 : jsonDTO.getPage();
         PageInfo pageInfo = healthQueryApi.query(q, type, pageSize, page);
         PayloadResponse response = new PayloadResponse("success", pageInfo.toMap());
-        return response;
+        return ServerlessResponse.builder().setObjectBody(response).build();
     }
 
     private void initApplication() {

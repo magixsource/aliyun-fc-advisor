@@ -5,6 +5,10 @@ import com.aliyun.fc.runtime.Context;
 import com.aliyun.fc.runtime.PojoRequestHandler;
 import com.google.inject.Injector;
 import gl.linpeng.gf.base.PayloadResponse;
+import gl.linpeng.gf.base.ServerlessRequest;
+import gl.linpeng.gf.base.ServerlessResponse;
+import gl.linpeng.gf.base.api.ApiRequest;
+import gl.linpeng.gf.base.api.ApiResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
 import gl.linpeng.serverless.advisor.controller.request.IdQueryRequest;
@@ -21,7 +25,7 @@ import javax.inject.Inject;
  * @author lin.peng
  * @since 1.0
  **/
-public class DiseaseController extends FunctionController<IdQueryRequest, PayloadResponse> implements PojoRequestHandler<IdQueryRequest, PayloadResponse> {
+public class DiseaseController extends FunctionController<IdQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<ApiRequest, ApiResponse> {
     private static final Logger logger = LoggerFactory.getLogger(DiseaseController.class);
     private Injector injector;
 
@@ -30,13 +34,17 @@ public class DiseaseController extends FunctionController<IdQueryRequest, Payloa
 
 
     @Override
-    public PayloadResponse handleRequest(IdQueryRequest idQueryRequest, Context context) {
+    public ApiResponse handleRequest(ApiRequest apiRequest, Context context) {
+        logger.debug("recieve api request {}", JSON.toJSONString(apiRequest));
         getFunction().getFunctionContext().put("ctx", context);
-        return handler(idQueryRequest);
+        ServerlessRequest serverlessRequest = new ServerlessRequest(apiRequest);
+        ServerlessResponse serverlessResponse = handler(serverlessRequest);
+        ApiResponse apiResponse = new ApiResponse(serverlessResponse);
+        return apiResponse;
     }
 
     @Override
-    public PayloadResponse internalHandle(IdQueryRequest jsonDTO) {
+    public ServerlessResponse internalHandle(IdQueryRequest jsonDTO) {
         // validate content
         if (jsonDTO == null) {
             logger.error("bad request {}", JSON.toJSONString(jsonDTO));
@@ -48,8 +56,8 @@ public class DiseaseController extends FunctionController<IdQueryRequest, Payloa
 
         Long id = jsonDTO.getId();
         Disease disease = healthQueryApi.getDiseaseById(id);
-        PayloadResponse response = new PayloadResponse("success", disease.toMap());
-        return response;
+        PayloadResponse payloadResponse = new PayloadResponse("success", disease.toMap());
+        return ServerlessResponse.builder().setObjectBody(payloadResponse).build();
     }
 
     private void initApplication() {

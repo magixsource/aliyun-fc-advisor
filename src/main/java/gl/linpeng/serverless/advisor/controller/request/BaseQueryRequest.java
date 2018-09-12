@@ -1,12 +1,10 @@
 package gl.linpeng.serverless.advisor.controller.request;
 
-import gl.linpeng.gf.base.ServerlessRequest;
-
 /**
  * @author lin.peng
  * @since 1.0
  **/
-public class BaseQueryRequest extends ServerlessRequest {
+public class BaseQueryRequest {
 
     private String q;
     private Long id;
