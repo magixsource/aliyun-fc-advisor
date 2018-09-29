@@ -3,22 +3,21 @@ package gl.linpeng.serverless.advisor.controller;
 import com.alibaba.fastjson.JSON;
 import com.aliyun.fc.runtime.Context;
 import com.aliyun.fc.runtime.PojoRequestHandler;
-import com.google.common.base.Strings;
 import com.google.inject.Injector;
-import gl.linpeng.gf.base.JsonDTO;
 import gl.linpeng.gf.base.PayloadResponse;
 import gl.linpeng.gf.base.ServerlessRequest;
 import gl.linpeng.gf.base.ServerlessResponse;
+import gl.linpeng.gf.base.api.ApiRequest;
+import gl.linpeng.gf.base.api.ApiResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
+import gl.linpeng.serverless.advisor.controller.request.IdQueryRequest;
 import gl.linpeng.serverless.advisor.inject.AdvisorModule;
 import gl.linpeng.serverless.advisor.model.Ingredient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Ingredient Controller
@@ -26,7 +25,7 @@ import java.util.Map;
  * @author lin.peng
  * @since 1.0
  **/
-public class IngredientController extends FunctionController<JsonDTO> implements PojoRequestHandler<JsonDTO, ServerlessResponse> {
+public class IngredientController extends FunctionController<IdQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<ApiRequest, ApiResponse> {
     private static final Logger logger = LoggerFactory.getLogger(IngredientController.class);
     private Injector injector;
 
@@ -35,32 +34,29 @@ public class IngredientController extends FunctionController<JsonDTO> implements
 
 
     @Override
-    public ServerlessResponse handleRequest(JsonDTO jsonDTO, Context context) {
+    public ApiResponse handleRequest(ApiRequest apiRequest, Context context) {
+        logger.debug("recieve api request {}", JSON.toJSONString(apiRequest));
         getFunction().getFunctionContext().put("ctx", context);
-        ServerlessRequest request = ServerlessRequest.builder().setObjectBody(jsonDTO).build();
-        return handler(request);
+        ServerlessRequest serverlessRequest = new ServerlessRequest(apiRequest);
+        ServerlessResponse serverlessResponse = handler(serverlessRequest);
+        ApiResponse apiResponse = new ApiResponse(serverlessResponse);
+        return apiResponse;
     }
 
     @Override
-    public ServerlessResponse internalHandle(JsonDTO jsonDTO) {
+    public ServerlessResponse internalHandle(IdQueryRequest jsonDTO) {
         // validate content
-        if (jsonDTO == null || Strings.isNullOrEmpty(jsonDTO.getContent())) {
+        if (jsonDTO == null) {
             logger.error("bad request {}", JSON.toJSONString(jsonDTO));
             throw new IllegalArgumentException("Bad request.");
         }
 
         // init runtime
         initApplication();
-        Map<String, String> requestBody = JSON.parseObject(jsonDTO.getContent(), Map.class);
-        if (requestBody.containsKey("id") == false || requestBody.get("id") == null) {
-            logger.error("bad request {}", requestBody);
-            throw new IllegalArgumentException("Bad request.");
-        }
-
-        Long id = Long.valueOf(requestBody.get("id"));
+        Long id = jsonDTO.getId();
         Ingredient ingredient = healthQueryApi.getIngredientById(id);
         PayloadResponse response = new PayloadResponse("success", ingredient.toMap());
-        return new ServerlessResponse.Builder().setObjectBody(response).build();
+        return ServerlessResponse.builder().setObjectBody(response).build();
     }
 
     private void initApplication() {

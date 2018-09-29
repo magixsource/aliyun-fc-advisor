@@ -5,16 +5,20 @@ import com.aliyun.fc.runtime.Context;
 import com.aliyun.fc.runtime.PojoRequestHandler;
 import com.google.common.base.Strings;
 import com.google.inject.Injector;
-import gl.linpeng.gf.base.*;
+import gl.linpeng.gf.base.PageInfo;
+import gl.linpeng.gf.base.PayloadResponse;
+import gl.linpeng.gf.base.ServerlessRequest;
+import gl.linpeng.gf.base.ServerlessResponse;
+import gl.linpeng.gf.base.api.ApiRequest;
+import gl.linpeng.gf.base.api.ApiResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
+import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
 import gl.linpeng.serverless.advisor.inject.AdvisorModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Disease Controller
@@ -22,7 +26,7 @@ import java.util.Map;
  * @author lin.peng
  * @since 1.0
  **/
-public class QueryController extends FunctionController<JsonDTO> implements PojoRequestHandler<JsonDTO, ServerlessResponse> {
+public class QueryController extends FunctionController<BaseQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<ApiRequest, ApiResponse> {
     private static final Logger logger = LoggerFactory.getLogger(QueryController.class);
     private Injector injector;
 
@@ -31,39 +35,33 @@ public class QueryController extends FunctionController<JsonDTO> implements Pojo
 
 
     @Override
-    public ServerlessResponse handleRequest(JsonDTO jsonDTO, Context context) {
+    public ApiResponse handleRequest(ApiRequest apiRequest, Context context) {
+        logger.debug("recieve api request {}", JSON.toJSONString(apiRequest));
         getFunction().getFunctionContext().put("ctx", context);
-        ServerlessRequest request = ServerlessRequest.builder().setObjectBody(jsonDTO).build();
-        return handler(request);
+        ServerlessRequest serverlessRequest = new ServerlessRequest(apiRequest);
+        ServerlessResponse serverlessResponse = handler(serverlessRequest);
+        ApiResponse apiResponse = new ApiResponse(serverlessResponse);
+        return apiResponse;
     }
 
     @Override
-    public ServerlessResponse internalHandle(JsonDTO jsonDTO) {
+    public ServerlessResponse internalHandle(BaseQueryRequest jsonDTO) {
         // validate content
-        if (jsonDTO == null || Strings.isNullOrEmpty(jsonDTO.getContent())) {
+        if (jsonDTO == null || Strings.isNullOrEmpty(jsonDTO.getQ()) || jsonDTO.getType() == null || Strings.isNullOrEmpty(jsonDTO.getType())) {
             logger.error("bad request {}", JSON.toJSONString(jsonDTO));
             throw new IllegalArgumentException("Bad request.");
         }
-
         // init runtime
         initApplication();
-        Map<String, String> requestBody = JSON.parseObject(jsonDTO.getContent(), Map.class);
-        if (requestBody.containsKey("q") == false || requestBody.get("q") == null || requestBody.containsKey("type") == false || requestBody.get("type") == null) {
-            logger.error("bad request {}", requestBody);
-            throw new IllegalArgumentException("Bad request.");
-        }
 
-        String q = requestBody.get("q").trim();
-        String type = requestBody.get("type").trim().toLowerCase();
-        String pageSizeStr = requestBody.get("pageSie");
-        String pageStr = requestBody.get("page");
-        Integer pageSize = Strings.isNullOrEmpty(pageSizeStr) ? 10 : Integer.valueOf(pageSizeStr.trim());
-        Integer page = Strings.isNullOrEmpty(pageStr) ? 1 : Integer.valueOf(pageStr.trim());
+        String q = jsonDTO.getQ().trim();
+        String type = jsonDTO.getType().trim().toLowerCase();
+
+        Integer pageSize = jsonDTO.getPageSize() == null ? 10 : jsonDTO.getPageSize();
+        Integer page = jsonDTO.getPage() == null ? 1 : jsonDTO.getPage();
         PageInfo pageInfo = healthQueryApi.query(q, type, pageSize, page);
-//        Map<String, Object> payload = new HashMap<>();
-//        payload.put("payload", pageInfo);
         PayloadResponse response = new PayloadResponse("success", pageInfo.toMap());
-        return new ServerlessResponse.Builder().setObjectBody(response).build();
+        return ServerlessResponse.builder().setObjectBody(response).build();
     }
 
     private void initApplication() {
