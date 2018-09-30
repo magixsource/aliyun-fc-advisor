@@ -26,7 +26,7 @@ import javax.inject.Inject;
  * @author lin.peng
  * @since 1.0
  **/
-public class QueryController extends FunctionController<BaseQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<ApiRequest, ApiResponse> {
+public class QueryController extends FunctionController<BaseQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<BaseQueryRequest, ServerlessResponse> {
     private static final Logger logger = LoggerFactory.getLogger(QueryController.class);
     private Injector injector;
 
@@ -35,13 +35,14 @@ public class QueryController extends FunctionController<BaseQueryRequest, Server
 
 
     @Override
-    public ApiResponse handleRequest(ApiRequest apiRequest, Context context) {
+    public ServerlessResponse handleRequest(BaseQueryRequest apiRequest, Context context) {
         logger.debug("recieve api request {}", JSON.toJSONString(apiRequest));
         getFunction().getFunctionContext().put("ctx", context);
-        ServerlessRequest serverlessRequest = new ServerlessRequest(apiRequest);
+        ServerlessRequest serverlessRequest = new ServerlessRequest.Builder().setObjectBody(apiRequest).build();
         ServerlessResponse serverlessResponse = handler(serverlessRequest);
-        ApiResponse apiResponse = new ApiResponse(serverlessResponse);
-        return apiResponse;
+        return serverlessResponse;
+//        ApiResponse apiResponse = new ApiResponse(serverlessResponse);
+//        return apiResponse;
     }
 
     @Override

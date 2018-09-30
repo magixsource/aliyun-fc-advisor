@@ -6,6 +6,8 @@ import com.aliyun.fc.runtime.Context;
 import com.aliyun.fc.runtime.Credentials;
 import com.aliyun.fc.runtime.FunctionComputeLogger;
 import com.aliyun.fc.runtime.FunctionParam;
+import gl.linpeng.gf.base.ServerlessRequest;
+import gl.linpeng.gf.base.api.ApiRequest;
 import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -47,7 +49,11 @@ public class AdvisorControllerTest {
             }
         };
         BaseQueryRequest request = JSON.parseObject(content, BaseQueryRequest.class);
-        Object result = advisorController.handleRequest(request, ctx);
+        ServerlessRequest serverlessRequest = new ServerlessRequest.Builder().setObjectBody(request).build();
+        ApiRequest apiRequest = new ApiRequest();
+        apiRequest.setBody(serverlessRequest.getBody());
+        apiRequest.setIsBase64Encoded(false);
+        Object result = advisorController.handleRequest(apiRequest, ctx);
         Assert.assertNotNull(result);
         System.out.println(JSON.toJSONString(result, true));
     }
