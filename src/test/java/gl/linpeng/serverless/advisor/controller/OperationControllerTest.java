@@ -1,32 +1,33 @@
 package gl.linpeng.serverless.advisor.controller;
 
-
 import com.alibaba.fastjson.JSON;
 import com.aliyun.fc.runtime.Context;
 import com.aliyun.fc.runtime.Credentials;
 import com.aliyun.fc.runtime.FunctionComputeLogger;
 import com.aliyun.fc.runtime.FunctionParam;
-import gl.linpeng.gf.base.ServerlessRequest;
-import gl.linpeng.gf.base.api.ApiRequest;
-import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
+import gl.linpeng.serverless.advisor.controller.request.OperationLogRequest;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 
-public class AdvisorControllerTest {
+/**
+ * @author lin.peng
+ * @since 1.0
+ **/
+public class OperationControllerTest {
 
-    private static AdvisorController advisorController;
+    private static OperationLogController operationLogController;
 
     @BeforeClass
     public static void init() {
-        advisorController = new AdvisorController();
+        operationLogController = new OperationLogController();
     }
 
     @Test
-    public void testGetAdvises() throws IOException {
-        String content = "{\"id\":\"1\",\"type\":\"d\",\"filter\":\"m\"}";
+    public void testOperation() throws IOException {
+        String content = "{\"operationType\":\"1\",\"operationTargetId\":\"11\",\"operationTargetType\":1}";
         Context ctx = new Context() {
             @Override
             public String getRequestId() {
@@ -48,12 +49,9 @@ public class AdvisorControllerTest {
                 return null;
             }
         };
-        BaseQueryRequest request = JSON.parseObject(content, BaseQueryRequest.class);
-        ServerlessRequest serverlessRequest = new ServerlessRequest.Builder().setObjectBody(request).build();
-//        ApiRequest apiRequest = new ApiRequest();
-//        apiRequest.setBody(serverlessRequest.getBody());
-//        apiRequest.setIsBase64Encoded(false);
-        Object result = advisorController.handleRequest(request, ctx);
+
+        OperationLogRequest request = JSON.parseObject(content, OperationLogRequest.class);
+        Object result = operationLogController.handleRequest(request, ctx);
         Assert.assertNotNull(result);
         System.out.println(JSON.toJSONString(result, true));
     }

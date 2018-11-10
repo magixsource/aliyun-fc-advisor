@@ -48,6 +48,7 @@ public class AdvisorController extends FunctionController<BaseQueryRequest, Serv
 
     @Override
     public ServerlessResponse internalHandle(BaseQueryRequest jsonDTO) {
+        logger.debug("dto {} and json {}",jsonDTO,JSON.toJSONString(jsonDTO));
         // validate content
         if (jsonDTO == null || jsonDTO.getId() == null || Strings.isNullOrEmpty(jsonDTO.getType()) || Strings.isNullOrEmpty(jsonDTO.getFilter())) {
             logger.error("bad request {}", JSON.toJSONString(jsonDTO));
