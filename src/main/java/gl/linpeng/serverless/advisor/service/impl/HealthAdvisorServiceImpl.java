@@ -60,8 +60,8 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
 
     @Override
     public PageInfo queryAdvises(Long id, String type, String adviseType, Integer pageSize, Integer page) {
-        String dSql = "SELECT DISTINCT(t.id),t.adverb,t.type,t.target,t3.`name` as target_name from principle_items t LEFT OUTER JOIN ingredients t3 on t.target = t3.id,principles t2 where t.id = t2.principleitem_id and t2.disease_id = {diseaseId} and t.adverb = {adverb}";
-        String iSql = "SELECT DISTINCT(t4.id) as target,t.adverb,t.type,t4.`name` as target_name from principle_items t LEFT OUTER JOIN principles t3 LEFT OUTER JOIN diseases t4 on t3.disease_id = t4.id ON t3.principleitem_id = t.id,ingredients t2 where t.type = 1 and t.target = t2.id and t2.id = {ingredientId} and t.adverb = {adverb}";
+        String dSql = "SELECT DISTINCT(t.id),t.adverb,t.type,t.target,t3.`name` as target_name,t2.id as principle_id from principle_items t LEFT OUTER JOIN ingredients t3 on t.target = t3.id,principles t2 where t.id = t2.principleitem_id and t2.disease_id = {diseaseId} and t.adverb = {adverb}";
+        String iSql = "SELECT DISTINCT(t4.id) as target,t.adverb,t.type,t4.`name` as target_name,t3.id as principle_id from principle_items t LEFT OUTER JOIN principles t3 LEFT OUTER JOIN diseases t4 on t3.disease_id = t4.id ON t3.principleitem_id = t.id,ingredients t2 where t.type = 1 and t.target = t2.id and t2.id = {ingredientId} and t.adverb = {adverb}";
         Integer adverb;
         if ("m".equalsIgnoreCase(adviseType)) {
             adverb = Constants.Adverb.MORE.getValue();
@@ -131,12 +131,16 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
                 } else {
                     model = new Disease();
                 }
+                Long principleItemId = resultSet.getLong("id");
+                Long principleId = resultSet.getLong("principle_id");
                 Long targetId = resultSet.getLong("target");
                 String targetName = resultSet.getString("target_name");
-                model.set("id", targetId);
                 model.set("name", targetName);
                 Map map = model.toMap();
+                map.put("id", principleItemId);
                 map.put("type", retType);
+                map.put("targetId", targetId);
+                map.put("principleId", principleId);
                 map.put("adverb", resultSet.getInt("adverb"));
                 list.add(map);
             }
