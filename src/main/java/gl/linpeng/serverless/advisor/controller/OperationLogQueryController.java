@@ -10,15 +10,13 @@ import gl.linpeng.gf.base.ServerlessRequest;
 import gl.linpeng.gf.base.ServerlessResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.OperationQueryApi;
-import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
+import gl.linpeng.serverless.advisor.controller.request.IdSetQueryRequest;
 import gl.linpeng.serverless.advisor.inject.AdvisorModule;
 import gl.linpeng.serverless.advisor.model.StatVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Operation Log Query controller
@@ -26,7 +24,7 @@ import java.util.Map;
  * @author lin.peng
  * @since 1.0
  **/
-public class OperationLogQueryController extends FunctionController<BaseQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<BaseQueryRequest, ServerlessResponse> {
+public class OperationLogQueryController extends FunctionController<IdSetQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<IdSetQueryRequest, ServerlessResponse> {
 
     private static final Logger logger = LoggerFactory.getLogger(OperationLogQueryController.class);
     private Injector injector;
@@ -35,7 +33,7 @@ public class OperationLogQueryController extends FunctionController<BaseQueryReq
     private OperationQueryApi operationQueryApi;
 
     @Override
-    public ServerlessResponse handleRequest(BaseQueryRequest apiRequest, Context context) {
+    public ServerlessResponse handleRequest(IdSetQueryRequest apiRequest, Context context) {
         logger.debug("recieve api request {}", JSON.toJSONString(apiRequest));
         getFunction().getFunctionContext().put("ctx", context);
         ServerlessRequest serverlessRequest = new ServerlessRequest.Builder().setObjectBody(apiRequest).build();
@@ -44,10 +42,10 @@ public class OperationLogQueryController extends FunctionController<BaseQueryReq
     }
 
     @Override
-    public ServerlessResponse internalHandle(BaseQueryRequest jsonDTO) {
+    public ServerlessResponse internalHandle(IdSetQueryRequest jsonDTO) {
         // validate
         logger.debug("dto {} json {}", jsonDTO, JSON.toJSONString(jsonDTO));
-        if (jsonDTO == null || jsonDTO.getId() == null || jsonDTO.getType() == null) {
+        if (jsonDTO == null || jsonDTO.getIds() == null || jsonDTO.getType() == null || jsonDTO.getIds().length == 0) {
             logger.error("bad request {}", JSON.toJSONString(jsonDTO));
             throw new IllegalArgumentException("Bad request.");
         }
@@ -57,9 +55,10 @@ public class OperationLogQueryController extends FunctionController<BaseQueryReq
 
         // stat
         Long operationTargetType = Long.valueOf(jsonDTO.getType());
-        List<StatVo> list = operationQueryApi.stat(operationTargetType,jsonDTO.getId());
+        Set<Long> ids = new HashSet<>(Arrays.asList(jsonDTO.getIds()));
+        Map<String, List<StatVo>> map = operationQueryApi.batchStat(operationTargetType, ids);
         Map<String, Object> payload = new HashMap<>(1);
-        payload.put("stat", list);
+        payload.put("stat", map);
         PayloadResponse payloadResponse = new PayloadResponse("success", payload);
         return ServerlessResponse.builder().setObjectBody(payloadResponse).build();
     }

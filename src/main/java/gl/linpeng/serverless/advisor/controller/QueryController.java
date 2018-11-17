@@ -5,12 +5,11 @@ import com.aliyun.fc.runtime.Context;
 import com.aliyun.fc.runtime.PojoRequestHandler;
 import com.google.common.base.Strings;
 import com.google.inject.Injector;
+import gl.linpeng.gf.annotation.Serverless;
 import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.gf.base.PayloadResponse;
 import gl.linpeng.gf.base.ServerlessRequest;
 import gl.linpeng.gf.base.ServerlessResponse;
-import gl.linpeng.gf.base.api.ApiRequest;
-import gl.linpeng.gf.base.api.ApiResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
 import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
@@ -26,6 +25,7 @@ import javax.inject.Inject;
  * @author lin.peng
  * @since 1.0
  **/
+@Serverless
 public class QueryController extends FunctionController<BaseQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<BaseQueryRequest, ServerlessResponse> {
     private static final Logger logger = LoggerFactory.getLogger(QueryController.class);
     private Injector injector;

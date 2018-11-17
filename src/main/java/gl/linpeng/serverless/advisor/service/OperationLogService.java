@@ -6,6 +6,7 @@ import gl.linpeng.serverless.advisor.model.OperationLog;
 import gl.linpeng.serverless.advisor.model.StatVo;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Operation log service
@@ -51,4 +52,13 @@ public interface OperationLogService {
      * @return
      */
     List<StatVo> stat(Long operationTargetType, Long operationTarget);
+
+    /**
+     * Batch stat
+     *
+     * @param operationTargetType target type
+     * @param operationTargetIds  target id set
+     * @return
+     */
+    List<StatVo> batchStat(Long operationTargetType, Set<Long> operationTargetIds);
 }

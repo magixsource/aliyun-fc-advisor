@@ -5,13 +5,18 @@ import gl.linpeng.serverless.advisor.controller.request.OperationLogRequest;
 import gl.linpeng.serverless.advisor.model.OperationLog;
 import gl.linpeng.serverless.advisor.model.StatVo;
 import gl.linpeng.serverless.advisor.service.OperationLogService;
+import org.apache.bval.util.StringUtils;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Paginator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -22,6 +27,7 @@ import java.util.stream.Collectors;
  **/
 
 public class OperationLogServiceImpl implements OperationLogService {
+    private static final Logger logger = LoggerFactory.getLogger(OperationLogServiceImpl.class);
 
     @Override
     public OperationLog saveOperationLog(OperationLogRequest operationLog) {
@@ -81,5 +87,54 @@ public class OperationLogServiceImpl implements OperationLogService {
             return vo;
         }).collect(Collectors.toList());
         return result;
+    }
+
+    @Override
+    public List<StatVo> batchStat(Long operationTargetType, Set<Long> operationTargetIds) {
+        logger.info("batch stat,{},{}", operationTargetType, operationTargetIds);
+        Base.open();
+        Connection connection = Base.connection();
+        String fullSql = "SELECT " +
+            "t2.disease_id," +
+            "t3.id," +
+            "t.operation_type AS operation_type," +
+            "count(t.id) AS cnt " +
+            "FROM " +
+            "operation_logs t," +
+            "principles t2," +
+            "principle_items t3 " +
+            "WHERE " +
+            "t2.id = t.operation_target_id " +
+            "AND t3.id = t2.principleitem_id " +
+            "AND t.operation_target_type = {targetType} " +
+            "and t3.id in ({ids}) " +
+            "GROUP BY " +
+            "t2.disease_id," +
+            "t3.id," +
+            "t.operation_type";
+        fullSql = fullSql.replace("{targetType}", operationTargetType.toString());
+        fullSql = fullSql.replace("{ids}", StringUtils.join(operationTargetIds, ","));
+        logger.info("full sql,{}", fullSql);
+        List<StatVo> list = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement(fullSql);
+            ResultSet resultSet = statement.executeQuery();
+
+            list = new ArrayList<>(resultSet.getFetchSize());
+            while (resultSet.next()) {
+                StatVo vo = new StatVo();
+                vo.setId(resultSet.getLong("disease_id"));
+                vo.setPrincipleId(resultSet.getLong("id"));
+                vo.setType(resultSet.getInt("operation_type"));
+                vo.setNumber(resultSet.getLong("cnt"));
+
+                list.add(vo);
+            }
+            logger.info("result:{}", list);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        Base.close();
+        return list;
     }
 }
