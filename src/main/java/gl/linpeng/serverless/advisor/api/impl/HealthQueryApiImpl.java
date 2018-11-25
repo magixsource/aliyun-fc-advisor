@@ -3,14 +3,14 @@ package gl.linpeng.serverless.advisor.api.impl;
 import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
 import gl.linpeng.serverless.advisor.model.Disease;
+import gl.linpeng.serverless.advisor.model.Food;
 import gl.linpeng.serverless.advisor.model.Ingredient;
-import gl.linpeng.serverless.advisor.service.DiseaseService;
-import gl.linpeng.serverless.advisor.service.HealthAdvisorService;
-import gl.linpeng.serverless.advisor.service.IngredientService;
+import gl.linpeng.serverless.advisor.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Health query api implement
@@ -27,6 +27,10 @@ public class HealthQueryApiImpl implements HealthQueryApi {
     IngredientService ingredientService;
     @Inject
     HealthAdvisorService healthAdvisorService;
+    @Inject
+    FoodService foodService;
+    @Inject
+    ComponentService componentService;
 
     @Override
     public PageInfo getQuerySuggests(String query, Integer pageSize, Integer page) {
@@ -65,5 +69,15 @@ public class HealthQueryApiImpl implements HealthQueryApi {
     @Override
     public Ingredient getIngredientById(Long id) {
         return ingredientService.getIngredientById(id);
+    }
+
+    @Override
+    public Food getFoodById(Long id) {
+        return foodService.getFoodById(id);
+    }
+
+    @Override
+    public List getComponentsByFoodId(Long id) {
+        return componentService.queryComponentByFoodId(id);
     }
 }

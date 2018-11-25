@@ -2,7 +2,10 @@ package gl.linpeng.serverless.advisor.api;
 
 import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.serverless.advisor.model.Disease;
+import gl.linpeng.serverless.advisor.model.Food;
 import gl.linpeng.serverless.advisor.model.Ingredient;
+
+import java.util.List;
 
 /**
  * Health domain api
@@ -62,4 +65,20 @@ public interface HealthQueryApi {
      * @return ingredient
      */
     Ingredient getIngredientById(Long id);
+
+    /**
+     * Get food by id
+     *
+     * @param id food id
+     * @return food
+     */
+    Food getFoodById(Long id);
+
+    /**
+     * Get all component of food
+     *
+     * @param id food id
+     * @return collects of component
+     */
+    List getComponentsByFoodId(Long id);
 }
