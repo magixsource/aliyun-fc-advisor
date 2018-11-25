@@ -7,14 +7,8 @@ import gl.linpeng.serverless.advisor.api.OperationQueryApi;
 import gl.linpeng.serverless.advisor.api.impl.HealthQueryApiImpl;
 import gl.linpeng.serverless.advisor.api.impl.OperationApiImpl;
 import gl.linpeng.serverless.advisor.api.impl.OperationQueryApiImpl;
-import gl.linpeng.serverless.advisor.service.DiseaseService;
-import gl.linpeng.serverless.advisor.service.HealthAdvisorService;
-import gl.linpeng.serverless.advisor.service.IngredientService;
-import gl.linpeng.serverless.advisor.service.OperationLogService;
-import gl.linpeng.serverless.advisor.service.impl.DiseaseServiceImpl;
-import gl.linpeng.serverless.advisor.service.impl.HealthAdvisorServiceImpl;
-import gl.linpeng.serverless.advisor.service.impl.IngredientServiceImpl;
-import gl.linpeng.serverless.advisor.service.impl.OperationLogServiceImpl;
+import gl.linpeng.serverless.advisor.service.*;
+import gl.linpeng.serverless.advisor.service.impl.*;
 
 
 /**
@@ -33,5 +27,7 @@ public class AdvisorModule extends AbstractModule {
         bind(OperationApi.class).to(OperationApiImpl.class);
         bind(OperationLogService.class).to(OperationLogServiceImpl.class);
         bind(OperationQueryApi.class).to(OperationQueryApiImpl.class);
+        bind(FoodService.class).to(FoodServiceImpl.class);
+        bind(ComponentService.class).to(ComponentServiceImpl.class);
     }
 }
