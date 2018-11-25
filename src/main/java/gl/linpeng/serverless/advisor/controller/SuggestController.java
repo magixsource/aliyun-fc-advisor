@@ -9,8 +9,6 @@ import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.gf.base.PayloadResponse;
 import gl.linpeng.gf.base.ServerlessRequest;
 import gl.linpeng.gf.base.ServerlessResponse;
-import gl.linpeng.gf.base.api.ApiRequest;
-import gl.linpeng.gf.base.api.ApiResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
 import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
@@ -40,7 +38,7 @@ public class SuggestController extends FunctionController<BaseQueryRequest, Serv
         // ServerlessRequest serverlessRequest = new ServerlessRequest(apiRequest);
         ServerlessRequest serverlessRequest = new ServerlessRequest.Builder().setObjectBody(apiRequest).build();
         ServerlessResponse serverlessResponse = handler(serverlessRequest);
-        return  serverlessResponse;
+        return serverlessResponse;
         // ApiResponse apiResponse = new ApiResponse(serverlessResponse);
         // return apiResponse;
     }
@@ -57,7 +55,10 @@ public class SuggestController extends FunctionController<BaseQueryRequest, Serv
         initApplication();
 
         String q = jsonDTO.getQ().trim();
-        PageInfo pageInfo = healthQueryApi.getQuerySuggests(q, 10, 1);
+        Integer pageSize = jsonDTO.getPageSize() == null ? 10 : jsonDTO.getPageSize();
+        Integer page = jsonDTO.getPage() == null ? 1 : jsonDTO.getPage();
+
+        PageInfo pageInfo = healthQueryApi.getQuerySuggests(q, pageSize, page);
 
         PayloadResponse response = new PayloadResponse("success", pageInfo.toMap());
         return ServerlessResponse.builder().setObjectBody(response).build();

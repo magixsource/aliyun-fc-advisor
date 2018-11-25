@@ -31,19 +31,31 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
         Base.open();
         Connection connection = Base.connection();
         List list = new ArrayList();
+        Long total = 0L;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(page(sql, pageSize, page));
+            PreparedStatement preparedStatement = connection.prepareStatement(count(sql));
+            //connection.prepareStatement(page(sql, pageSize, page));
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null) {
                 while (resultSet.next()) {
-                    Map<String, Object> objectMap = new HashMap<>();
-                    Long id = resultSet.getLong("id");
-                    String name = resultSet.getString("name");
-                    String type = resultSet.getString("type");
-                    objectMap.put("id", id);
-                    objectMap.put("name", name);
-                    objectMap.put("type", type);
-                    list.add(objectMap);
+                    total = resultSet.getLong(1);
+                }
+            }
+            if (total > 0) {
+                preparedStatement = connection.prepareStatement(page(sql, pageSize, page));
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        Map<String, Object> objectMap = new HashMap<>();
+                        Long id = resultSet.getLong("id");
+                        String name = resultSet.getString("name");
+                        String type = resultSet.getString("type");
+                        objectMap.put("id", id);
+                        objectMap.put("name", name);
+                        objectMap.put("type", type);
+                        list.add(objectMap);
+                    }
                 }
             }
 
@@ -54,6 +66,7 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
         PageInfo pageInfo = new PageInfo();
         pageInfo.setPage(page);
         pageInfo.setPageSize(pageSize);
+        pageInfo.setTotal(total);
         pageInfo.setList(list);
         return pageInfo;
     }
