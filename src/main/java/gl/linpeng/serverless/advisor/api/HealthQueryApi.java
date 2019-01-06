@@ -75,10 +75,38 @@ public interface HealthQueryApi {
     Food getFoodById(Long id);
 
     /**
-     * Get all component of food
+     * Query food by name
+     *
+     * @param name     food name
+     * @param pageSize page size
+     * @param page     page number
+     * @return food page info
+     */
+    PageInfo queryFood(String name, Integer pageSize, Integer page);
+
+    /**
+     * Get all material of food
      *
      * @param id food id
-     * @return collects of component
+     * @return collects of material
      */
     List getComponentsByFoodId(Long id);
+
+    /**
+     * Get all tag of food
+     *
+     * @param id food id
+     * @return collects of tag
+     */
+    List getTagsByFoodId(Long id);
+
+    /**
+     * Query food by tag name
+     *
+     * @param name     tag name
+     * @param pageSize page size
+     * @param page     page number
+     * @return foods
+     */
+    PageInfo queryFoodByTagName(String name, Integer pageSize, Integer page);
 }

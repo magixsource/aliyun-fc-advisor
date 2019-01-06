@@ -47,7 +47,7 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public PageInfo query(String name, Integer pageSize, Integer page) {
         Base.open();
-        Paginator p = new Paginator(Food.class, pageSize, "name like ?", name + "%").orderBy("name desc");
+        Paginator p = new Paginator(Food.class, pageSize, "name like ?", (name + "%")).orderBy("name desc");
         List<Disease> list = p.getPage(page);
         PageInfo pageInfo = new PageInfo();
         List<Map<String, Object>> mapList = ((LazyList<Disease>) list).toMaps();

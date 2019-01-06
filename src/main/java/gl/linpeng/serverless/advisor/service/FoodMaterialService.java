@@ -28,7 +28,7 @@ public interface FoodMaterialService {
      * @param id food id
      * @return food material set
      */
-    List<FoodMaterial> queryFoodMaterialByFoodId(Long id);
+    List queryFoodMaterialByFoodId(Long id);
 
 
 }

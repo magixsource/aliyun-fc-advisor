@@ -20,6 +20,7 @@ import java.util.List;
  **/
 public class HealthQueryApiImpl implements HealthQueryApi {
     private static final Logger logger = LoggerFactory.getLogger(HealthQueryApiImpl.class);
+    public static final Long TAG_CATALOG_FOOD = 1L;
 
     @Inject
     DiseaseService diseaseService;
@@ -77,7 +78,26 @@ public class HealthQueryApiImpl implements HealthQueryApi {
     }
 
     @Override
+    public PageInfo queryFood(String name, Integer pageSize, Integer page) {
+        pageSize = pageSize == null ? 10 : pageSize;
+        page = page == null ? 1 : page;
+        return foodService.query(name, pageSize, page);
+    }
+
+    @Override
     public List getComponentsByFoodId(Long id) {
         return foodMaterialService.queryFoodMaterialByFoodId(id);
+    }
+
+    @Override
+    public List getTagsByFoodId(Long id) {
+        return foodService.getAllTagByFoodId(id, TAG_CATALOG_FOOD);
+    }
+
+    @Override
+    public PageInfo queryFoodByTagName(String name, Integer pageSize, Integer page) {
+        pageSize = pageSize == null ? 10 : pageSize;
+        page = page == null ? 1 : page;
+        return foodService.queryByTag(name, TAG_CATALOG_FOOD, pageSize, page);
     }
 }
