@@ -3,10 +3,10 @@ package gl.linpeng.serverless.advisor.model;
 import org.javalite.activejdbc.Model;
 
 /**
- * Food component model
+ * 标签节点
  *
  * @author lin.peng
  * @since 1.0
  **/
-public class Component extends Model {
+public class TagNode extends Model {
 }

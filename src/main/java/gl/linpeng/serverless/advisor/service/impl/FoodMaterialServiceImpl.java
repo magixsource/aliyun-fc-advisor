@@ -1,7 +1,7 @@
 package gl.linpeng.serverless.advisor.service.impl;
 
-import gl.linpeng.serverless.advisor.model.Component;
-import gl.linpeng.serverless.advisor.service.ComponentService;
+import gl.linpeng.serverless.advisor.model.FoodMaterial;
+import gl.linpeng.serverless.advisor.service.FoodMaterialService;
 import org.javalite.activejdbc.Base;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,28 +13,28 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Component service implement
+ * FoodMaterial service implement
  *
  * @author lin.peng
  * @since 1.0
  **/
-public class ComponentServiceImpl implements ComponentService {
-    private static final Logger logger = LoggerFactory.getLogger(ComponentServiceImpl.class);
+public class FoodMaterialServiceImpl implements FoodMaterialService {
+    private static final Logger logger = LoggerFactory.getLogger(FoodMaterialServiceImpl.class);
 
-    static final String sql = "select t2.* from ingredients t2,components t where t2.id = t.ingredient_id and t.food_id = {food_id}";
+    static final String SQL_GET_ALL_MATERIAL_BY_FOOD = "select t2.* from ingredients t2,food_materials t where t2.id = t.ingredient_id and t.food_id = {food_id}";
 
     @Override
-    public Component save(Long foodId, Long ingredientId, int percent) {
+    public FoodMaterial save(Long foodId, Long ingredientId, int percent) {
         Base.open();
-        Component component = new Component();
-        component.set("food_id", foodId).set("ingredient_id", ingredientId).set("percent", percent).set("create_time", new Date()).saveIt();
+        FoodMaterial foodMaterial = new FoodMaterial();
+        foodMaterial.set("food_id", foodId).set("ingredient_id", ingredientId).set("percent", percent).set("create_time", new Date()).saveIt();
         Base.close();
-        return component;
+        return foodMaterial;
     }
 
     @Override
-    public List queryComponentByFoodId(Long id) {
-        String tempSql = sql.replace("{food_id}", id.toString());
+    public List queryFoodMaterialByFoodId(Long id) {
+        String tempSql = SQL_GET_ALL_MATERIAL_BY_FOOD.replace("{food_id}", id.toString());
         Base.open();
         Connection connection = Base.connection();
         List<Map<String, Object>> list = null;
@@ -52,7 +52,7 @@ public class ComponentServiceImpl implements ComponentService {
                 list.add(objectMap);
             }
         } catch (SQLException e) {
-            logger.error("QueryComponentByFoodId error {}", e);
+            logger.error("QueryFoodMaterialByFoodId error {}", e);
         }
         Base.close();
         return list;

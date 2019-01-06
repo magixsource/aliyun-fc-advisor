@@ -30,7 +30,7 @@ public class HealthQueryApiImpl implements HealthQueryApi {
     @Inject
     FoodService foodService;
     @Inject
-    ComponentService componentService;
+    FoodMaterialService foodMaterialService;
 
     @Override
     public PageInfo getQuerySuggests(String query, Integer pageSize, Integer page) {
@@ -78,6 +78,6 @@ public class HealthQueryApiImpl implements HealthQueryApi {
 
     @Override
     public List getComponentsByFoodId(Long id) {
-        return componentService.queryComponentByFoodId(id);
+        return foodMaterialService.queryFoodMaterialByFoodId(id);
     }
 }

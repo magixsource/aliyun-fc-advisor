@@ -1,6 +1,9 @@
 package gl.linpeng.serverless.advisor.service;
 
+import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.serverless.advisor.model.Food;
+
+import java.util.List;
 
 /**
  * Food service
@@ -30,4 +33,38 @@ public interface FoodService {
      * @return food
      */
     Food save(String name, String enName, String region, String department, String summary, String content);
+
+
+    /**
+     * Fuzzy search by name
+     *
+     * @param name     food name
+     * @param pageSize page size
+     * @param page     page number
+     * @return foods
+     */
+    PageInfo query(String name, Integer pageSize, Integer page);
+
+    /**
+     * Search by tag name
+     *
+     * @param tagName      name of food tag
+     * @param tagCatalogId tag catalog id
+     * @param pageSize     page size
+     * @param page         page number
+     * @return foods
+     */
+    PageInfo queryByTag(String tagName, Long tagCatalogId, Integer pageSize, Integer page);
+
+
+    /**
+     * Get all tags of food
+     *
+     * @param foodId       food id
+     * @param tagCatalogId tag catalog id
+     * @return tags
+     */
+    List getAllTagByFoodId(Long foodId, Long tagCatalogId);
+
+
 }
