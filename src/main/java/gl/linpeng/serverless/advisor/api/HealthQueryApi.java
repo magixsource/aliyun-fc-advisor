@@ -31,7 +31,7 @@ public interface HealthQueryApi {
      * Health Common Query
      *
      * @param query    input content
-     * @param type     f: food , d: disease
+     * @param type     f: food , d: disease,i: ingredient
      * @param pageSize page size default 10
      * @param page     page default 1
      * @return foods and diseases
@@ -42,7 +42,7 @@ public interface HealthQueryApi {
      * get health advises
      *
      * @param id         food id or disease id
-     * @param type       f|d
+     * @param type       f|d|i
      * @param adviseType more|less|forbidden
      * @param pageSize   default 10
      * @param page       default 1
@@ -109,4 +109,14 @@ public interface HealthQueryApi {
      * @return foods
      */
     PageInfo queryFoodByTagName(String name, Integer pageSize, Integer page);
+
+    /**
+     * Query food by ingredient id
+     *
+     * @param ingredientId ingredient id
+     * @param pageSize     page size
+     * @param page         page number
+     * @return foods
+     */
+    PageInfo queryFoodByIngredientId(Long ingredientId, Integer pageSize, Integer page);
 }

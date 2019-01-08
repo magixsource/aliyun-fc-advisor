@@ -44,10 +44,12 @@ public class HealthQueryApiImpl implements HealthQueryApi {
     public PageInfo query(String query, String type, Integer pageSize, Integer page) {
         pageSize = pageSize == null ? 10 : pageSize;
         page = page == null ? 1 : page;
-        if ("f".equalsIgnoreCase(type)) {
+        if ("i".equalsIgnoreCase(type)) {
             return ingredientService.query(query, pageSize, page);
         } else if ("d".equalsIgnoreCase(type)) {
             return diseaseService.query(query, pageSize, page);
+        } else if ("f".equalsIgnoreCase(type)) {
+            return foodService.query(query, pageSize, page);
         } else {
             //TODO auto determine f or d
             logger.error("unsupported type {}", type);
@@ -99,5 +101,12 @@ public class HealthQueryApiImpl implements HealthQueryApi {
         pageSize = pageSize == null ? 10 : pageSize;
         page = page == null ? 1 : page;
         return foodService.queryByTag(name, TAG_CATALOG_FOOD, pageSize, page);
+    }
+
+    @Override
+    public PageInfo queryFoodByIngredientId(Long ingredientId, Integer pageSize, Integer page) {
+        pageSize = pageSize == null ? 10 : pageSize;
+        page = page == null ? 1 : page;
+        return foodService.queryByIngredient(ingredientId, pageSize, page);
     }
 }

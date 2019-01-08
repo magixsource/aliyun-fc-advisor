@@ -67,4 +67,13 @@ public interface FoodService {
     List getAllTagByFoodId(Long foodId, Long tagCatalogId);
 
 
+    /**
+     * Search by ingredient id
+     *
+     * @param ingredientId ingredient id
+     * @param pageSize     page size
+     * @param page         page number
+     * @return foods
+     */
+    PageInfo queryByIngredient(Long ingredientId, Integer pageSize, Integer page);
 }

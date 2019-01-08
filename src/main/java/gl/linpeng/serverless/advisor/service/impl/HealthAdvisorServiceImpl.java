@@ -27,7 +27,7 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
 
     @Override
     public PageInfo getQuerySuggests(String query, Integer pageSize, Integer page) {
-        String sql = "SELECT t.id,t.name,t.type from (SELECT t1.id,t1.name,'f' as type from ingredients t1 UNION ALL SELECT t2.id,t2.name,'d' as type from diseases t2) t where t.name LIKE '%" + query + "%'";
+        String sql = "SELECT t.id,t.name,t.type from (SELECT t1.id,t1.name,'i' as type from ingredients t1 UNION ALL SELECT t2.id,t2.name,'d' as type from diseases t2 UNION ALL SELECT t3.id,t3.name, 'f' as type from foods t3) t where t.name LIKE '%" + query + "%'";
         Base.open();
         Connection connection = Base.connection();
         List list = new ArrayList();
@@ -91,7 +91,7 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
         Connection connection = Base.connection();
         PageInfo pageInfo = new PageInfo();
         try {
-            if ("f".equalsIgnoreCase(type)) {
+            if ("i".equalsIgnoreCase(type)) {
                 getAdvisesByType(type, id, pageSize, page, iSql, adverb, list, pageInfo, connection);
             } else if ("d".equalsIgnoreCase(type)) {
                 getAdvisesByType(type, id, pageSize, page, dSql, adverb, list, pageInfo, connection);
@@ -112,11 +112,11 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
     private void getAdvisesByType(String type, Long id, Integer pageSize, Integer page, String sql, Integer adverb, List list, PageInfo pageInfo, Connection connection) throws SQLException {
         boolean isDiseaseType = false;
         String retType = null;
-        if ("f".equalsIgnoreCase(type)) {
+        if ("i".equalsIgnoreCase(type)) {
             retType = "d";
         } else if ("d".equalsIgnoreCase(type)) {
             isDiseaseType = true;
-            retType = "f";
+            retType = "i";
         } else {
             throw new UnsupportedOperationException("unsupported adviseType. " + type);
         }

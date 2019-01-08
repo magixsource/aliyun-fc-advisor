@@ -35,7 +35,7 @@ public class IngredientServiceImpl implements IngredientService {
         PageInfo pageInfo = new PageInfo();
         List<Map<String, Object>> mapList = ((LazyList<Disease>) list).toMaps();
         mapList.forEach(e -> {
-            e.put("type", "f");
+            e.put("type", "i");
         });
         pageInfo.setList(mapList);
         pageInfo.setTotal(p.getCount());
