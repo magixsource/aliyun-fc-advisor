@@ -17,7 +17,7 @@ aliyun-fc-advisor
 		    "payload":{ // 响应消息主体
 		       list:[
 		        {"title":"苹果", // 名称
-				"type":"f",     // 类型：f:food,d:disease
+				"type":"i",     // 类型：f:food,d:disease,i:ingredient
 				"id":1111},     // 主键值
 				{"title":"感冒","type":"d","id":2222},
                 ...
@@ -50,7 +50,7 @@ aliyun-fc-advisor
 				list:[
 					{
 						"name":"苹果",
-						"type":"f",
+						"type":"i",
 						"id":1111,
 						"imgs":[
 							"http://example.com/cdn/f/apple.png?h=60&w=60",
