@@ -29,5 +29,6 @@ public class AdvisorModule extends AbstractModule {
         bind(OperationQueryApi.class).to(OperationQueryApiImpl.class);
         bind(FoodService.class).to(FoodServiceImpl.class);
         bind(FoodMaterialService.class).to(FoodMaterialServiceImpl.class);
+        bind(UserService.class).to(UserServiceImpl.class);
     }
 }

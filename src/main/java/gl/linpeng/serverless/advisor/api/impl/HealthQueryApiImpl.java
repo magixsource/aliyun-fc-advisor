@@ -5,6 +5,7 @@ import gl.linpeng.serverless.advisor.api.HealthQueryApi;
 import gl.linpeng.serverless.advisor.model.Disease;
 import gl.linpeng.serverless.advisor.model.Food;
 import gl.linpeng.serverless.advisor.model.Ingredient;
+import gl.linpeng.serverless.advisor.model.User;
 import gl.linpeng.serverless.advisor.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,8 @@ public class HealthQueryApiImpl implements HealthQueryApi {
     FoodService foodService;
     @Inject
     FoodMaterialService foodMaterialService;
+    @Inject
+    UserService userService;
 
     @Override
     public PageInfo getQuerySuggests(String query, Integer pageSize, Integer page) {
@@ -108,5 +111,10 @@ public class HealthQueryApiImpl implements HealthQueryApi {
         pageSize = pageSize == null ? 10 : pageSize;
         page = page == null ? 1 : page;
         return foodService.queryByIngredient(ingredientId, pageSize, page);
+    }
+
+    @Override
+    public User getOrSaveUser(String openId) {
+        return userService.getOrSave(openId);
     }
 }

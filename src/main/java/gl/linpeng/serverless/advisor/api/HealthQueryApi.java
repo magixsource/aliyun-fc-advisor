@@ -4,6 +4,7 @@ import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.serverless.advisor.model.Disease;
 import gl.linpeng.serverless.advisor.model.Food;
 import gl.linpeng.serverless.advisor.model.Ingredient;
+import gl.linpeng.serverless.advisor.model.User;
 
 import java.util.List;
 
@@ -119,4 +120,12 @@ public interface HealthQueryApi {
      * @return foods
      */
     PageInfo queryFoodByIngredientId(Long ingredientId, Integer pageSize, Integer page);
+
+    /**
+     * Get user if user exist, save it otherwise
+     *
+     * @param openId we-chat openid
+     * @return user model
+     */
+    User getOrSaveUser(String openId);
 }
