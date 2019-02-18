@@ -1,10 +1,8 @@
 package gl.linpeng.serverless.advisor.api;
 
 import gl.linpeng.gf.base.PageInfo;
-import gl.linpeng.serverless.advisor.model.Disease;
-import gl.linpeng.serverless.advisor.model.Food;
-import gl.linpeng.serverless.advisor.model.Ingredient;
-import gl.linpeng.serverless.advisor.model.User;
+import gl.linpeng.serverless.advisor.controller.request.UserFeatureRequest;
+import gl.linpeng.serverless.advisor.model.*;
 
 import java.util.List;
 
@@ -128,4 +126,12 @@ public interface HealthQueryApi {
      * @return user model
      */
     User getOrSaveUser(String openId);
+
+    /**
+     * Save user feature
+     *
+     * @param dto user feature request dto
+     * @return user feature model
+     */
+    UserFeature saveUserFeature(UserFeatureRequest dto);
 }

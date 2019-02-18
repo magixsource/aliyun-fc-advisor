@@ -2,10 +2,8 @@ package gl.linpeng.serverless.advisor.api.impl;
 
 import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
-import gl.linpeng.serverless.advisor.model.Disease;
-import gl.linpeng.serverless.advisor.model.Food;
-import gl.linpeng.serverless.advisor.model.Ingredient;
-import gl.linpeng.serverless.advisor.model.User;
+import gl.linpeng.serverless.advisor.controller.request.UserFeatureRequest;
+import gl.linpeng.serverless.advisor.model.*;
 import gl.linpeng.serverless.advisor.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,5 +114,28 @@ public class HealthQueryApiImpl implements HealthQueryApi {
     @Override
     public User getOrSaveUser(String openId) {
         return userService.getOrSave(openId);
+    }
+
+    @Override
+    public UserFeature saveUserFeature(UserFeatureRequest dto) {
+        // check if user exist
+        String openId = dto.getOpenId();
+        User user = userService.getUser(openId);
+        if (user == null) {
+            logger.error("User {} is not exist.", openId);
+            throw new IllegalArgumentException("User is not exist.");
+        }
+        Integer userId = dto.getUserId();
+        if (!user.getInteger("id").equals(userId)) {
+            logger.error("User {} is not match {}.", openId, userId);
+            throw new IllegalArgumentException("User is not match.");
+        }
+        Integer type = dto.getType();
+        Integer diseaseId = dto.getDiseaseId();
+        Integer foodId = dto.getFoodId();
+        Integer ingredientId = dto.getIngredientId();
+
+        UserFeature userFeature = userService.saveFeature(userId, type, diseaseId, foodId, ingredientId);
+        return userFeature;
     }
 }

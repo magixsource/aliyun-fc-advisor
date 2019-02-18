@@ -13,6 +13,33 @@ public final class Constants {
     public static final int COUNT_TYPE_PRICIPLE = 1;
     public static final int COUNT_TYPE_PRICIPLE_ITEM = 2;
 
+    public enum UserFeatureType {
+        DISEASE(1, "DISEASE"), FOOD(2, "FOOD"), INGREDIENT(3, "INGREDIENT");
+        public String name;
+        public Integer value;
+
+        UserFeatureType(Integer value, String name) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public void setValue(Integer value) {
+            this.value = value;
+        }
+    }
+
     public enum PrincipleItemType {
         FOOD(1, "FOOD"), NATRIENT(2, "NATRIENT");
 
