@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         Base.open();
         UserFeature userFeature = new UserFeature();
         Date now = new Date();
-        userFeature.setInteger("user_id", userId).setInteger("type", type).setTimestamp("create_time", now).setTimestamp("update_time", now);
+        userFeature.setInteger("user_id", userId).setInteger("type", type).setInteger("dr", 0).setTimestamp("create_time", now).setTimestamp("update_time", now);
         if (Constants.UserFeatureType.DISEASE.getValue().equals(type)) {
             userFeature.setInteger("disease_id", diseaseId);
         }
