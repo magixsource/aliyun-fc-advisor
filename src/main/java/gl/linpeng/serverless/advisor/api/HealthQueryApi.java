@@ -134,4 +134,11 @@ public interface HealthQueryApi {
      * @return user feature model
      */
     UserFeature saveUserFeature(UserFeatureRequest dto);
+
+    /**
+     * Delete user feature
+     *
+     * @param dto user feature request dto
+     */
+    void deleteUserFeature(UserFeatureRequest dto);
 }

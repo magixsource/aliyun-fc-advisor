@@ -43,4 +43,15 @@ public interface UserService {
      * @return user feature
      */
     UserFeature saveFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId);
+
+    /**
+     * delete user feature
+     *
+     * @param userId       user id
+     * @param type         user feature type
+     * @param diseaseId    disease id
+     * @param foodId       food id
+     * @param ingredientId ingredient id
+     */
+    void deleteUserFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId);
 }

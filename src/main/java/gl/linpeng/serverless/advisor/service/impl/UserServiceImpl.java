@@ -72,4 +72,21 @@ public class UserServiceImpl implements UserService {
         Base.close();
         return userFeature;
     }
+
+    @Override
+    public void deleteUserFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId) {
+        Base.open();
+        String conditions = "user_id = ? ";
+        if (Constants.UserFeatureType.DISEASE.getValue().equals(type)) {
+            conditions += " and type = 1 and disease_id = " + diseaseId;
+        }
+        if (Constants.UserFeatureType.FOOD.getValue().equals(type)) {
+            conditions += " and type = 2 and food_id = " + foodId;
+        }
+        if (Constants.UserFeatureType.INGREDIENT.getValue().equals(type)) {
+            conditions += " and type = 3 and ingredient_id = " + ingredientId;
+        }
+        UserFeature.update("dr = 1", conditions, userId);
+        Base.close();
+    }
 }

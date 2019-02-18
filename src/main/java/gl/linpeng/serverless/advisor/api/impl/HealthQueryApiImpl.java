@@ -118,6 +118,20 @@ public class HealthQueryApiImpl implements HealthQueryApi {
 
     @Override
     public UserFeature saveUserFeature(UserFeatureRequest dto) {
+        // check user
+        checkUser(dto);
+
+        Integer userId = dto.getUserId();
+        Integer type = dto.getType();
+        Integer diseaseId = dto.getDiseaseId();
+        Integer foodId = dto.getFoodId();
+        Integer ingredientId = dto.getIngredientId();
+
+        UserFeature userFeature = userService.saveFeature(userId, type, diseaseId, foodId, ingredientId);
+        return userFeature;
+    }
+
+    private void checkUser(UserFeatureRequest dto) {
         // check if user exist
         String openId = dto.getOpenId();
         User user = userService.getUser(openId);
@@ -130,12 +144,17 @@ public class HealthQueryApiImpl implements HealthQueryApi {
             logger.error("User {} is not match {}.", openId, userId);
             throw new IllegalArgumentException("User is not match.");
         }
+    }
+
+    @Override
+    public void deleteUserFeature(UserFeatureRequest dto) {
+        // check user
+        checkUser(dto);
+        Integer userId = dto.getUserId();
         Integer type = dto.getType();
         Integer diseaseId = dto.getDiseaseId();
         Integer foodId = dto.getFoodId();
         Integer ingredientId = dto.getIngredientId();
-
-        UserFeature userFeature = userService.saveFeature(userId, type, diseaseId, foodId, ingredientId);
-        return userFeature;
+        userService.deleteUserFeature(userId, type, diseaseId, foodId, ingredientId);
     }
 }
