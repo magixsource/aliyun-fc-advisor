@@ -1,6 +1,7 @@
 package gl.linpeng.serverless.advisor.api;
 
 import gl.linpeng.gf.base.PageInfo;
+import gl.linpeng.serverless.advisor.controller.request.UserFeatureQueryRequest;
 import gl.linpeng.serverless.advisor.controller.request.UserFeatureRequest;
 import gl.linpeng.serverless.advisor.model.*;
 
@@ -141,4 +142,12 @@ public interface HealthQueryApi {
      * @param dto user feature request dto
      */
     void deleteUserFeature(UserFeatureRequest dto);
+
+    /**
+     * Query User feature
+     *
+     * @param dto user feature query request dto
+     * @return page info
+     */
+    PageInfo queryUserFeature(UserFeatureQueryRequest dto);
 }

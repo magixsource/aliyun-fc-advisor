@@ -2,6 +2,7 @@ package gl.linpeng.serverless.advisor.api.impl;
 
 import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
+import gl.linpeng.serverless.advisor.controller.request.UserFeatureQueryRequest;
 import gl.linpeng.serverless.advisor.controller.request.UserFeatureRequest;
 import gl.linpeng.serverless.advisor.model.*;
 import gl.linpeng.serverless.advisor.service.*;
@@ -156,5 +157,19 @@ public class HealthQueryApiImpl implements HealthQueryApi {
         Integer foodId = dto.getFoodId();
         Integer ingredientId = dto.getIngredientId();
         userService.deleteUserFeature(userId, type, diseaseId, foodId, ingredientId);
+    }
+
+    @Override
+    public PageInfo queryUserFeature(UserFeatureQueryRequest dto) {
+        checkUser(dto);
+        Integer pageSize = dto.getPageSize();
+        Integer page = dto.getPage();
+
+        pageSize = pageSize == null ? 10 : pageSize;
+        page = page == null ? 1 : page;
+        Integer userId = dto.getUserId();
+        Integer type = dto.getType();
+
+        return userService.queryUserFeature(userId, type, pageSize, page);
     }
 }

@@ -1,5 +1,6 @@
 package gl.linpeng.serverless.advisor.service;
 
+import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.serverless.advisor.model.User;
 import gl.linpeng.serverless.advisor.model.UserFeature;
 
@@ -54,4 +55,15 @@ public interface UserService {
      * @param ingredientId ingredient id
      */
     void deleteUserFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId);
+
+    /**
+     * Query user feature
+     *
+     * @param userId   user id
+     * @param type     user feature type
+     * @param pageSize page size
+     * @param page     page
+     * @return page info
+     */
+    PageInfo queryUserFeature(Integer userId, Integer type, Integer pageSize, Integer page);
 }
