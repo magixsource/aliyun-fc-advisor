@@ -130,7 +130,7 @@ public class OperationLogServiceImpl implements OperationLogService {
 
                 list.add(vo);
             }
-            logger.info("result:{}", list);
+            logger.debug("result:{}", list);
         } catch (SQLException e) {
             e.printStackTrace();
         }

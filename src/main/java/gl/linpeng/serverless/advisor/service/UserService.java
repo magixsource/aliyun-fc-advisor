@@ -65,5 +65,5 @@ public interface UserService {
      * @param page     page
      * @return page info
      */
-    PageInfo queryUserFeature(Integer userId, Integer type, Integer pageSize, Integer page);
+    PageInfo queryUserFeature(Integer userId, Integer type, Integer diseaseId,Integer foodId, Integer ingredientId, Integer pageSize, Integer page);
 }

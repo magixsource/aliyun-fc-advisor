@@ -96,8 +96,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageInfo queryUserFeature(Integer userId, Integer type, Integer pageSize, Integer page) {
-        String sql = "select t.*,t2.name as disease_name,t3.name as food_name,t4.name as ingredient_name from user_features t LEFT OUTER JOIN diseases t2 on t.disease_id = t2.id LEFT OUTER JOIN foods t3 on t.food_id = t3.id LEFT OUTER JOIN ingredients t4 on t.ingredient_id = t4.id and t.dr = 0 and t.user_id = " + userId + " and t.type = " + type + " order by create_time desc";
+    public PageInfo queryUserFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId, Integer pageSize, Integer page) {
+        String sql = "select t.*,t2.name as disease_name,t3.name as food_name,t4.name as ingredient_name from user_features t LEFT OUTER JOIN diseases t2 on t.disease_id = t2.id LEFT OUTER JOIN foods t3 on t.food_id = t3.id LEFT OUTER JOIN ingredients t4 on t.ingredient_id = t4.id where t.dr = 0 and t.user_id = " + userId + " and t.type = " + type;
+        if (diseaseId != null) {
+            sql += " and t.disease_id = " + diseaseId;
+        }
+        if (foodId != null) {
+            sql += " and t.food_id = " + foodId;
+        }
+        if (ingredientId != null) {
+            sql += " and t.ingredient_id = " + ingredientId;
+        }
+        sql += " order by create_time desc";
         Base.open();
         Connection connection = Base.connection();
         List list = new ArrayList();

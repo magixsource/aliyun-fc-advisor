@@ -169,7 +169,10 @@ public class HealthQueryApiImpl implements HealthQueryApi {
         page = page == null ? 1 : page;
         Integer userId = dto.getUserId();
         Integer type = dto.getType();
+        Integer diseaseId = dto.getDiseaseId();
+        Integer foodId = dto.getFoodId();
+        Integer ingredientId = dto.getIngredientId();
 
-        return userService.queryUserFeature(userId, type, pageSize, page);
+        return userService.queryUserFeature(userId, type, diseaseId, foodId, ingredientId, pageSize, page);
     }
 }
