@@ -41,14 +41,14 @@ public interface HealthQueryApi {
     /**
      * get health advises
      *
-     * @param id         food id or disease id
+     * @param ids        food id or disease id
      * @param type       f|d|i
      * @param adviseType more|less|forbidden
      * @param pageSize   default 10
      * @param page       default 1
      * @return advises
      */
-    PageInfo queryAdvises(Long id, String type, String adviseType, Integer pageSize, Integer page);
+    PageInfo queryAdvises(Long[] ids, String type, String adviseType, Integer pageSize, Integer page);
 
     /**
      * Get disease by id

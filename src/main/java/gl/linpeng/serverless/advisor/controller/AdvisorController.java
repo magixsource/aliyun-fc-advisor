@@ -9,11 +9,9 @@ import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.gf.base.PayloadResponse;
 import gl.linpeng.gf.base.ServerlessRequest;
 import gl.linpeng.gf.base.ServerlessResponse;
-import gl.linpeng.gf.base.api.ApiRequest;
-import gl.linpeng.gf.base.api.ApiResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
-import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
+import gl.linpeng.serverless.advisor.controller.request.IdSetQueryRequest;
 import gl.linpeng.serverless.advisor.inject.AdvisorModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +26,7 @@ import java.util.Map;
  * @author lin.peng
  * @since 1.0
  **/
-public class AdvisorController extends FunctionController<BaseQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<BaseQueryRequest, ServerlessResponse> {
+public class AdvisorController extends FunctionController<IdSetQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<IdSetQueryRequest, ServerlessResponse> {
     private static final Logger logger = LoggerFactory.getLogger(AdvisorController.class);
     private Injector injector;
 
@@ -36,7 +34,7 @@ public class AdvisorController extends FunctionController<BaseQueryRequest, Serv
     private HealthQueryApi healthQueryApi;
 
     @Override
-    public ServerlessResponse handleRequest(BaseQueryRequest apiRequest, Context context) {
+    public ServerlessResponse handleRequest(IdSetQueryRequest apiRequest, Context context) {
         logger.debug("recieve api request {}", JSON.toJSONString(apiRequest));
         getFunction().getFunctionContext().put("ctx", context);
         ServerlessRequest serverlessRequest = new ServerlessRequest.Builder().setObjectBody(apiRequest).build();
@@ -47,10 +45,10 @@ public class AdvisorController extends FunctionController<BaseQueryRequest, Serv
     }
 
     @Override
-    public ServerlessResponse internalHandle(BaseQueryRequest jsonDTO) {
-        logger.debug("dto {} and json {}",jsonDTO,JSON.toJSONString(jsonDTO));
+    public ServerlessResponse internalHandle(IdSetQueryRequest jsonDTO) {
+        logger.debug("dto {} and json {}", jsonDTO, JSON.toJSONString(jsonDTO));
         // validate content
-        if (jsonDTO == null || jsonDTO.getId() == null || Strings.isNullOrEmpty(jsonDTO.getType()) || Strings.isNullOrEmpty(jsonDTO.getFilter())) {
+        if (jsonDTO == null || jsonDTO.getIds() == null || Strings.isNullOrEmpty(jsonDTO.getType()) || Strings.isNullOrEmpty(jsonDTO.getFilter())) {
             logger.error("bad request {}", JSON.toJSONString(jsonDTO));
             throw new IllegalArgumentException("Bad request.");
         }
@@ -58,14 +56,14 @@ public class AdvisorController extends FunctionController<BaseQueryRequest, Serv
         // init runtime
         initApplication();
 
-        Long id = jsonDTO.getId();
+        Long[] ids = jsonDTO.getIds();
         String type = jsonDTO.getType().trim();
         String filter = jsonDTO.getFilter().trim();
         Integer pageSize = jsonDTO.getPageSize() == null ? 10 : jsonDTO.getPageSize();
         Integer page = jsonDTO.getPage() == null ? 1 : jsonDTO.getPage();
 
 
-        PageInfo pageInfo = healthQueryApi.queryAdvises(id, type, filter, pageSize, page);
+        PageInfo pageInfo = healthQueryApi.queryAdvises(ids, type, filter, pageSize, page);
         Map<String, Object> payload = new HashMap<>();
         payload.put("payload", pageInfo);
         PayloadResponse response = new PayloadResponse("success", payload);

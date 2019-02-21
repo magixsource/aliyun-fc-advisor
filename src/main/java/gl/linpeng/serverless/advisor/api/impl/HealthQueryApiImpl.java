@@ -60,10 +60,10 @@ public class HealthQueryApiImpl implements HealthQueryApi {
     }
 
     @Override
-    public PageInfo queryAdvises(Long id, String type, String adviseType, Integer pageSize, Integer page) {
+    public PageInfo queryAdvises(Long[] ids, String type, String adviseType, Integer pageSize, Integer page) {
         pageSize = pageSize == null ? 10 : pageSize;
         page = page == null ? 1 : page;
-        return healthAdvisorService.queryAdvises(id, type, adviseType, pageSize, page);
+        return healthAdvisorService.queryAdvises(ids, type, adviseType, pageSize, page);
     }
 
     @Override

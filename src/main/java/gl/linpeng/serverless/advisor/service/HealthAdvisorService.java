@@ -10,6 +10,6 @@ public interface HealthAdvisorService {
 
     PageInfo getQuerySuggests(String query, Integer pageSize, Integer page);
 
-    PageInfo queryAdvises(Long id, String type, String adviseType, Integer pageSize, Integer page);
+    PageInfo queryAdvises(Long[] ids, String type, String adviseType, Integer pageSize, Integer page);
 
 }

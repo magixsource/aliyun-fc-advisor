@@ -7,8 +7,7 @@ import com.aliyun.fc.runtime.Credentials;
 import com.aliyun.fc.runtime.FunctionComputeLogger;
 import com.aliyun.fc.runtime.FunctionParam;
 import gl.linpeng.gf.base.ServerlessRequest;
-import gl.linpeng.gf.base.api.ApiRequest;
-import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
+import gl.linpeng.serverless.advisor.controller.request.IdSetQueryRequest;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,7 +25,7 @@ public class AdvisorControllerTest {
 
     @Test
     public void testGetAdvises() throws IOException {
-        String content = "{\"id\":\"1\",\"type\":\"d\",\"filter\":\"m\"}";
+        String content = "{\"ids\":[\"1\",\"2\"],\"type\":\"i\",\"filter\":\"m\"}";
         Context ctx = new Context() {
             @Override
             public String getRequestId() {
@@ -48,7 +47,7 @@ public class AdvisorControllerTest {
                 return null;
             }
         };
-        BaseQueryRequest request = JSON.parseObject(content, BaseQueryRequest.class);
+        IdSetQueryRequest request = JSON.parseObject(content, IdSetQueryRequest.class);
         ServerlessRequest serverlessRequest = new ServerlessRequest.Builder().setObjectBody(request).build();
 //        ApiRequest apiRequest = new ApiRequest();
 //        apiRequest.setBody(serverlessRequest.getBody());

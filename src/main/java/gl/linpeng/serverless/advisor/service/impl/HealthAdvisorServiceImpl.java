@@ -5,6 +5,7 @@ import gl.linpeng.serverless.advisor.common.Constants;
 import gl.linpeng.serverless.advisor.model.Disease;
 import gl.linpeng.serverless.advisor.model.Ingredient;
 import gl.linpeng.serverless.advisor.service.HealthAdvisorService;
+import org.apache.bval.util.StringUtils;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.Model;
 
@@ -72,9 +73,9 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
     }
 
     @Override
-    public PageInfo queryAdvises(Long id, String type, String adviseType, Integer pageSize, Integer page) {
-        String dSql = "SELECT DISTINCT(t.id),t.adverb,t.type,t.target,t3.`name` as target_name,t2.id as principle_id from principle_items t LEFT OUTER JOIN ingredients t3 on t.target = t3.id,principles t2 where t.id = t2.principleitem_id and t2.disease_id = {diseaseId} and t.adverb = {adverb}";
-        String iSql = "SELECT DISTINCT(t4.id) as target,t.adverb,t.type,t4.`name` as target_name,t3.id as principle_id from principle_items t LEFT OUTER JOIN principles t3 LEFT OUTER JOIN diseases t4 on t3.disease_id = t4.id ON t3.principleitem_id = t.id,ingredients t2 where t.type = 1 and t.target = t2.id and t2.id = {ingredientId} and t.adverb = {adverb}";
+    public PageInfo queryAdvises(Long[] ids, String type, String adviseType, Integer pageSize, Integer page) {
+        String dSql = "SELECT DISTINCT(t.id),t.adverb,t.type,t.target,t3.`name` as target_name,t2.id as principle_id,count(l.id) as cnt from principle_items t LEFT OUTER JOIN ingredients t3 on t.target = t3.id,principles t2 LEFT outer JOIN operation_logs l on l.operation_type = 1 and l.operation_target_type = 1 and l.operation_target_id = t2.id where t.id = t2.principleitem_id and t2.disease_id in ({diseaseId}) and t.adverb = {adverb} GROUP BY t.id,t.adverb,t.type,t.target,t3.`name`,t2.id order by count(l.id) DESC";
+        String iSql = "SELECT DISTINCT(t4.id) as target,t.id,t.adverb,t.type,t4.`name` as target_name,t3.id as principle_id,count(l.id) as cnt from principle_items t LEFT OUTER JOIN principles t3 LEFT outer JOIN operation_logs l on l.operation_type = 1 and l.operation_target_type = 1 and l.operation_target_id = t3.id LEFT OUTER JOIN diseases t4 on t3.disease_id = t4.id ON t3.principleitem_id = t.id,ingredients t2 where t.type = 1 and t.target = t2.id and t2.id in ({ingredientId}) and t.adverb = {adverb} GROUP BY t4.id,t.id,t.adverb,t.type,t4.`name`,t3.id order BY count(l.id) DESC";
         Integer adverb;
         if ("m".equalsIgnoreCase(adviseType)) {
             adverb = Constants.Adverb.MORE.getValue();
@@ -92,9 +93,9 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
         PageInfo pageInfo = new PageInfo();
         try {
             if ("i".equalsIgnoreCase(type)) {
-                getAdvisesByType(type, id, pageSize, page, iSql, adverb, list, pageInfo, connection);
+                getAdvisesByType(type, ids, pageSize, page, iSql, adverb, list, pageInfo, connection);
             } else if ("d".equalsIgnoreCase(type)) {
-                getAdvisesByType(type, id, pageSize, page, dSql, adverb, list, pageInfo, connection);
+                getAdvisesByType(type, ids, pageSize, page, dSql, adverb, list, pageInfo, connection);
             } else {
                 throw new UnsupportedOperationException("unsupported type. " + type);
             }
@@ -109,7 +110,7 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
         return pageInfo;
     }
 
-    private void getAdvisesByType(String type, Long id, Integer pageSize, Integer page, String sql, Integer adverb, List list, PageInfo pageInfo, Connection connection) throws SQLException {
+    private void getAdvisesByType(String type, Long[] ids, Integer pageSize, Integer page, String sql, Integer adverb, List list, PageInfo pageInfo, Connection connection) throws SQLException {
         boolean isDiseaseType = false;
         String retType = null;
         if ("i".equalsIgnoreCase(type)) {
@@ -122,9 +123,9 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
         }
         PreparedStatement preparedStatement;
         if (isDiseaseType) {
-            sql = sql.replace("{diseaseId}", id.toString());
+            sql = sql.replace("{diseaseId}", StringUtils.joinArray(ids,","));
         } else {
-            sql = sql.replace("{ingredientId}", id.toString());
+            sql = sql.replace("{ingredientId}", StringUtils.joinArray(ids,","));
         }
         sql = sql.replace("{adverb}", adverb.toString());
         String countSql = count(sql);
