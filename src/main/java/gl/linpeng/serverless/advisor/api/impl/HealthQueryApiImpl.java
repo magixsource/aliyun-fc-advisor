@@ -2,6 +2,7 @@ package gl.linpeng.serverless.advisor.api.impl;
 
 import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
+import gl.linpeng.serverless.advisor.common.Constants;
 import gl.linpeng.serverless.advisor.controller.request.UserFeatureQueryRequest;
 import gl.linpeng.serverless.advisor.controller.request.UserFeatureRequest;
 import gl.linpeng.serverless.advisor.model.*;
@@ -10,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Health query api implement
@@ -174,5 +177,27 @@ public class HealthQueryApiImpl implements HealthQueryApi {
         Integer ingredientId = dto.getIngredientId();
 
         return userService.queryUserFeature(userId, type, diseaseId, foodId, ingredientId, pageSize, page);
+    }
+
+    @Override
+    public PageInfo userRecommend(UserFeatureQueryRequest dto) {
+        //validate
+        checkUser(dto);
+        // get user feature
+        Integer userId = dto.getUserId();
+        PageInfo userFeaturePageInfo = userService.queryUserFeature(userId, Constants.UserFeatureType.DISEASE.getValue(), null, null, null, 100, 1);
+        PageInfo result = new PageInfo();
+        if (userFeaturePageInfo.getTotal() != null && userFeaturePageInfo.getTotal() > 0) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) userFeaturePageInfo.getList();
+            List<Long> idList = new ArrayList<>(list.size());
+            for (Map map : list) {
+                Long id = Long.valueOf(map.get("diseaseId").toString());
+                idList.add(id);
+            }
+            Long[] ids = new Long[idList.size()];
+            ids = idList.toArray(ids);
+            result = queryAdvises(ids, "d", "m", dto.getPageSize(), dto.getPage());
+        }
+        return result;
     }
 }

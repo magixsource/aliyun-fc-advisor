@@ -150,4 +150,12 @@ public interface HealthQueryApi {
      * @return page info
      */
     PageInfo queryUserFeature(UserFeatureQueryRequest dto);
+
+    /**
+     * User recommend advise
+     *
+     * @param dto request dto
+     * @return page info
+     */
+    PageInfo userRecommend(UserFeatureQueryRequest dto);
 }
