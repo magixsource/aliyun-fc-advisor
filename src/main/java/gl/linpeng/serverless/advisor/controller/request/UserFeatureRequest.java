@@ -14,6 +14,7 @@ public class UserFeatureRequest {
     private Integer diseaseId;
     private Integer foodId;
     private Integer ingredientId;
+    private String filter;
 
     @NotNull
     private String openId;
@@ -64,5 +65,13 @@ public class UserFeatureRequest {
 
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 }

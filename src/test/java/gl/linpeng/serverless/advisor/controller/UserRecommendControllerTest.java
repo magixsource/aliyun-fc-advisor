@@ -24,7 +24,7 @@ public class UserRecommendControllerTest {
 
     @Test
     public void testQueryUserFeature() throws IOException {
-        String content = "{\"openId\":\"o6zHH5cIm4nuMr_gTyRar9Xy2x-U\",\"userId\":1}";
+        String content = "{\"openId\":\"o6zHH5cIm4nuMr_gTyRar9Xy2x-U\",\"userId\":1,\"filter\":\"m\"}";
         Context ctx = new Context() {
             @Override
             public String getRequestId() {

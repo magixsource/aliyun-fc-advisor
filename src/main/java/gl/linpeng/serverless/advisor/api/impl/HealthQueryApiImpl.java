@@ -196,7 +196,7 @@ public class HealthQueryApiImpl implements HealthQueryApi {
             }
             Long[] ids = new Long[idList.size()];
             ids = idList.toArray(ids);
-            result = queryAdvises(ids, "d", "m", dto.getPageSize(), dto.getPage());
+            result = queryAdvises(ids, "d", dto.getFilter(), dto.getPageSize(), dto.getPage());
         }
         return result;
     }
