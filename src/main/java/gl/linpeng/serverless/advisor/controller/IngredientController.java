@@ -35,7 +35,7 @@ public class IngredientController extends FunctionController<IdQueryRequest, Ser
 
     @Override
     public ServerlessResponse handleRequest(IdQueryRequest apiRequest, Context context) {
-        logger.debug("recieve api request {}", JSON.toJSONString(apiRequest));
+        logger.debug("receive api request {}", JSON.toJSONString(apiRequest));
         getFunction().getFunctionContext().put("ctx", context);
         ServerlessRequest serverlessRequest = new ServerlessRequest.Builder().setObjectBody(apiRequest).build();
         ServerlessResponse serverlessResponse = handler(serverlessRequest);
