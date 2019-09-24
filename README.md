@@ -1,6 +1,10 @@
 # aliyun-fc-advisor
 aliyun-fc-advisor
 
+# how to run
+1. add maven phase `org.javalite:activejdbc-instrumentation:2.0:instrument`
+2. run instrument before build
+3. run as serverless or springboot as you like
 
 # Advisor API
 ## 通用搜索
