@@ -28,9 +28,9 @@ public class OperationQueryApiImpl implements OperationQueryApi {
     }
 
     @Override
-    public Map<String, List<StatVo>> batchStat(Long operationTargetType, Set<Long> ids) {
-        List<StatVo> list = operationLogService.batchStat(operationTargetType, ids);
-        Map<String, List<StatVo>> map = list.stream().collect(Collectors.groupingBy(e-> e.getPrincipleId().toString()));
+    public Map<String, List<StatVo>> batchStat(Long id, Long operationTargetType, Set<Long> ids) {
+        List<StatVo> list = operationLogService.batchStat(id, operationTargetType, ids);
+        Map<String, List<StatVo>> map = list.stream().collect(Collectors.groupingBy(e -> e.getPrincipleId().toString()));
         return map;
     }
 }

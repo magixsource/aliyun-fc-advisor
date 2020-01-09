@@ -29,7 +29,8 @@ public interface OperationQueryApi {
      *
      * @param operationTargetType target type
      * @param ids                 id sets
+     * @param id                  id
      * @return
      */
-    Map<String, List<StatVo>> batchStat(Long operationTargetType, Set<Long> ids);
+    Map<String, List<StatVo>> batchStat(Long id, Long operationTargetType, Set<Long> ids);
 }

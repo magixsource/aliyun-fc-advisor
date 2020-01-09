@@ -58,7 +58,8 @@ public interface OperationLogService {
      *
      * @param operationTargetType target type
      * @param operationTargetIds  target id set
+     * @param id                  id
      * @return
      */
-    List<StatVo> batchStat(Long operationTargetType, Set<Long> operationTargetIds);
+    List<StatVo> batchStat(Long id, Long operationTargetType, Set<Long> operationTargetIds);
 }

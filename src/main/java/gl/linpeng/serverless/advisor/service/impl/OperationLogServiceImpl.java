@@ -90,7 +90,7 @@ public class OperationLogServiceImpl implements OperationLogService {
     }
 
     @Override
-    public List<StatVo> batchStat(Long operationTargetType, Set<Long> operationTargetIds) {
+    public List<StatVo> batchStat(Long id, Long operationTargetType, Set<Long> operationTargetIds) {
         logger.info("batch stat,{},{}", operationTargetType, operationTargetIds);
         Base.open();
         Connection connection = Base.connection();
@@ -104,7 +104,8 @@ public class OperationLogServiceImpl implements OperationLogService {
             "principles t2," +
             "principle_items t3 " +
             "WHERE " +
-            "t2.id = t.operation_target_id " +
+            "t2.disease_id = {diseaseId} "+
+            "AND t2.id = t.operation_target_id " +
             "AND t3.id = t2.principleitem_id " +
             "AND t.operation_target_type = {targetType} " +
             "and t3.id in ({ids}) " +
@@ -112,6 +113,7 @@ public class OperationLogServiceImpl implements OperationLogService {
             "t2.disease_id," +
             "t3.id," +
             "t.operation_type";
+        fullSql = fullSql.replace("{diseaseId}", id.toString());
         fullSql = fullSql.replace("{targetType}", operationTargetType.toString());
         fullSql = fullSql.replace("{ids}", StringUtils.join(operationTargetIds, ","));
         logger.info("full sql,{}", fullSql);
@@ -127,7 +129,6 @@ public class OperationLogServiceImpl implements OperationLogService {
                 vo.setPrincipleId(resultSet.getLong("id"));
                 vo.setType(resultSet.getInt("operation_type"));
                 vo.setNumber(resultSet.getLong("cnt"));
-
                 list.add(vo);
             }
             logger.debug("result:{}", list);

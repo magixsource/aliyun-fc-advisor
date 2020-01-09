@@ -45,7 +45,7 @@ public class OperationLogQueryController extends FunctionController<IdSetQueryRe
     public ServerlessResponse internalHandle(IdSetQueryRequest jsonDTO) {
         // validate
         logger.debug("dto {} json {}", jsonDTO, JSON.toJSONString(jsonDTO));
-        if (jsonDTO == null || jsonDTO.getIds() == null || jsonDTO.getType() == null || jsonDTO.getIds().length == 0) {
+        if (jsonDTO == null ||jsonDTO.getId() == null ||jsonDTO.getIds() == null || jsonDTO.getType() == null || jsonDTO.getIds().length == 0) {
             logger.error("bad request {}", JSON.toJSONString(jsonDTO));
             throw new IllegalArgumentException("Bad request.");
         }
@@ -56,7 +56,8 @@ public class OperationLogQueryController extends FunctionController<IdSetQueryRe
         // stat
         Long operationTargetType = Long.valueOf(jsonDTO.getType());
         Set<Long> ids = new HashSet<>(Arrays.asList(jsonDTO.getIds()));
-        Map<String, List<StatVo>> map = operationQueryApi.batchStat(operationTargetType, ids);
+        Long id = Long.valueOf(jsonDTO.getId());
+        Map<String, List<StatVo>> map = operationQueryApi.batchStat(id,operationTargetType, ids);
         Map<String, Object> payload = new HashMap<>(1);
         payload.put("stat", map);
         PayloadResponse payloadResponse = new PayloadResponse("success", payload);
