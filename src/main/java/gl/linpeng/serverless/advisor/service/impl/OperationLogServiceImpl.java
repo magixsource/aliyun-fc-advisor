@@ -96,22 +96,20 @@ public class OperationLogServiceImpl implements OperationLogService {
         Connection connection = Base.connection();
         String fullSql = "SELECT " +
             "t2.disease_id," +
-            "t3.id," +
+            "t2.principleitem_id as id," +
             "t.operation_type AS operation_type," +
             "count(t.id) AS cnt " +
             "FROM " +
             "operation_logs t," +
-            "principles t2," +
-            "principle_items t3 " +
+            "principles t2 " +
             "WHERE " +
             "t2.disease_id = {diseaseId} "+
             "AND t2.id = t.operation_target_id " +
-            "AND t3.id = t2.principleitem_id " +
             "AND t.operation_target_type = {targetType} " +
-            "and t3.id in ({ids}) " +
+            "and t2.principleitem_id in ({ids}) " +
             "GROUP BY " +
             "t2.disease_id," +
-            "t3.id," +
+            "t2.principleitem_id," +
             "t.operation_type";
         fullSql = fullSql.replace("{diseaseId}", id.toString());
         fullSql = fullSql.replace("{targetType}", operationTargetType.toString());
