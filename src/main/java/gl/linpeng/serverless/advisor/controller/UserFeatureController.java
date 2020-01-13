@@ -60,10 +60,11 @@ public class UserFeatureController extends FunctionController<UserFeatureRequest
         }
         if ((Constants.UserFeatureType.DISEASE.getValue().equals(type) && dto.getDiseaseId() == null) ||
             (Constants.UserFeatureType.FOOD.getValue().equals(type) && dto.getFoodId() == null) ||
-            (Constants.UserFeatureType.INGREDIENT.getValue().equals(type) && dto.getIngredientId() == null)) {
+            (Constants.UserFeatureType.INGREDIENT.getValue().equals(type) && dto.getIngredientId() == null) ||
+            (Constants.UserFeatureType.TAG.getValue().equals(type) && dto.getTagId() == null)) {
             throw new IllegalArgumentException("Bad request.");
         }
-        if (dto.getDiseaseId() == null && dto.getFoodId() == null && dto.getIngredientId() == null) {
+        if (dto.getDiseaseId() == null && dto.getFoodId() == null && dto.getIngredientId() == null && dto.getTagId() == null) {
             throw new IllegalArgumentException("Bad request.");
         }
         // init runtime

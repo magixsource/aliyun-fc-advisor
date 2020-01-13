@@ -132,8 +132,9 @@ public class HealthQueryApiImpl implements HealthQueryApi {
         Integer diseaseId = dto.getDiseaseId();
         Integer foodId = dto.getFoodId();
         Integer ingredientId = dto.getIngredientId();
+        Integer tagId = dto.getTagId();
 
-        UserFeature userFeature = userService.saveFeature(userId, type, diseaseId, foodId, ingredientId);
+        UserFeature userFeature = userService.saveFeature(userId, type, diseaseId, foodId, ingredientId,tagId);
         return userFeature;
     }
 

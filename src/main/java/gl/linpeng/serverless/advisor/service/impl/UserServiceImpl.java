@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserFeature saveFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId) {
+    public UserFeature saveFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId, Integer tagId) {
         Base.open();
         UserFeature userFeature = new UserFeature();
         Date now = new Date();
@@ -73,13 +73,16 @@ public class UserServiceImpl implements UserService {
         if (Constants.UserFeatureType.INGREDIENT.getValue().equals(type)) {
             userFeature.setInteger("ingredient_id", ingredientId);
         }
+        if (Constants.UserFeatureType.TAG.getValue().equals(type)) {
+            userFeature.setInteger("tag_id", tagId);
+        }
         userFeature.saveIt();
         Base.close();
         return userFeature;
     }
 
     @Override
-    public void deleteUserFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId,Integer tagId) {
+    public void deleteUserFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId, Integer tagId) {
         Base.open();
         String conditions = "user_id = ? ";
         if (Constants.UserFeatureType.DISEASE.getValue().equals(type)) {
