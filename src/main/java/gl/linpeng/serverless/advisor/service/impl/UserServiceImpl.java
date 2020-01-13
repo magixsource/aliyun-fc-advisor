@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId) {
+    public void deleteUserFeature(Integer userId, Integer type, Integer diseaseId, Integer foodId, Integer ingredientId,Integer tagId) {
         Base.open();
         String conditions = "user_id = ? ";
         if (Constants.UserFeatureType.DISEASE.getValue().equals(type)) {
@@ -90,6 +90,9 @@ public class UserServiceImpl implements UserService {
         }
         if (Constants.UserFeatureType.INGREDIENT.getValue().equals(type)) {
             conditions += " and type = 3 and ingredient_id = " + ingredientId;
+        }
+        if (Constants.UserFeatureType.TAG.getValue().equals(type)) {
+            conditions += " and type = 4 and tag_id = " + tagId;
         }
         UserFeature.update("dr = 1", conditions, userId);
         Base.close();
@@ -136,6 +139,7 @@ public class UserServiceImpl implements UserService {
                         String resultDiseaseName = resultSet.getString("disease_name");
                         String resultFoodName = resultSet.getString("food_name");
                         String resultIngredientName = resultSet.getString("ingredient_name");
+                        Integer tagId = resultSet.getInt("tag_id");
                         objectMap.put("id", id);
                         objectMap.put("userId", resultUserId);
                         objectMap.put("type", resultType);
@@ -145,6 +149,7 @@ public class UserServiceImpl implements UserService {
                         objectMap.put("diseaseName", resultDiseaseName);
                         objectMap.put("foodName", resultFoodName);
                         objectMap.put("ingredientName", resultIngredientName);
+                        objectMap.put("tagId", tagId);
                         list.add(objectMap);
                     }
                 }

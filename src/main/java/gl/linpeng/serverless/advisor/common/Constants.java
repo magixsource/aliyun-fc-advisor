@@ -14,7 +14,7 @@ public final class Constants {
     public static final int COUNT_TYPE_PRICIPLE_ITEM = 2;
 
     public enum UserFeatureType {
-        DISEASE(1, "DISEASE"), FOOD(2, "FOOD"), INGREDIENT(3, "INGREDIENT");
+        DISEASE(1, "DISEASE"), FOOD(2, "FOOD"), INGREDIENT(3, "INGREDIENT"), TAG(4, "TAG");
         public String name;
         public Integer value;
 

@@ -14,6 +14,7 @@ public class UserFeatureRequest {
     private Integer diseaseId;
     private Integer foodId;
     private Integer ingredientId;
+    private Integer tagId;
     private String filter;
 
     @NotNull
@@ -73,5 +74,13 @@ public class UserFeatureRequest {
 
     public void setFilter(String filter) {
         this.filter = filter;
+    }
+
+    public Integer getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(Integer tagId) {
+        this.tagId = tagId;
     }
 }

@@ -161,7 +161,8 @@ public class HealthQueryApiImpl implements HealthQueryApi {
         Integer diseaseId = dto.getDiseaseId();
         Integer foodId = dto.getFoodId();
         Integer ingredientId = dto.getIngredientId();
-        userService.deleteUserFeature(userId, type, diseaseId, foodId, ingredientId);
+        Integer tagId = dto.getTagId();
+        userService.deleteUserFeature(userId, type, diseaseId, foodId, ingredientId,tagId);
     }
 
     @Override
