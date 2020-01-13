@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         if (Constants.UserFeatureType.INGREDIENT.getValue().equals(type)) {
             userFeature.setInteger("ingredient_id", ingredientId);
         }
-        if (Constants.UserFeatureType.TAG.getValue().equals(type)) {
+        if (Constants.UserFeatureType.TASTE.getValue().equals(type) || Constants.UserFeatureType.COOKING.getValue().equals(type)) {
             userFeature.setInteger("tag_id", tagId);
         }
         userFeature.saveIt();
@@ -94,8 +94,11 @@ public class UserServiceImpl implements UserService {
         if (Constants.UserFeatureType.INGREDIENT.getValue().equals(type)) {
             conditions += " and type = 3 and ingredient_id = " + ingredientId;
         }
-        if (Constants.UserFeatureType.TAG.getValue().equals(type)) {
+        if (Constants.UserFeatureType.TASTE.getValue().equals(type)) {
             conditions += " and type = 4 and tag_id = " + tagId;
+        }
+        if (Constants.UserFeatureType.COOKING.getValue().equals(type)) {
+            conditions += " and type = 5 and tag_id = " + tagId;
         }
         UserFeature.update("dr = 1", conditions, userId);
         Base.close();
