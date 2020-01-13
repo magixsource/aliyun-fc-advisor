@@ -158,4 +158,14 @@ public interface HealthQueryApi {
      * @return page info
      */
     PageInfo userRecommend(UserFeatureQueryRequest dto);
+
+    /**
+     * Query Tags by Catalog id
+     *
+     * @param catalogId catalog id
+     * @param pageSize  page size
+     * @param page      page number
+     * @return tags
+     */
+    PageInfo queryTagsByCatalogId(Long catalogId, Integer pageSize, Integer page);
 }

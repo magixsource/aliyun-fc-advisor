@@ -37,6 +37,8 @@ public class HealthQueryApiImpl implements HealthQueryApi {
     FoodMaterialService foodMaterialService;
     @Inject
     UserService userService;
+    @Inject
+    TagService tagService;
 
     @Override
     public PageInfo getQuerySuggests(String query, Integer pageSize, Integer page) {
@@ -199,5 +201,12 @@ public class HealthQueryApiImpl implements HealthQueryApi {
             result = queryAdvises(ids, "d", dto.getFilter(), dto.getPageSize(), dto.getPage());
         }
         return result;
+    }
+
+    @Override
+    public PageInfo queryTagsByCatalogId(Long catalogId, Integer pageSize, Integer page) {
+        pageSize = pageSize == null ? 10 : pageSize;
+        page = page == null ? 1 : page;
+        return tagService.queryTagsByCatalogId(catalogId,pageSize,page);
     }
 }
