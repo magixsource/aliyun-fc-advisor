@@ -1,6 +1,7 @@
 package gl.linpeng.serverless.advisor.service.impl;
 
 import gl.linpeng.gf.base.PageInfo;
+import gl.linpeng.serverless.advisor.model.Article;
 import gl.linpeng.serverless.advisor.service.ArticleService;
 import org.javalite.activejdbc.Base;
 
@@ -72,8 +73,8 @@ public class ArticleServiceImpl implements ArticleService {
                             String summary = resultSet.getString("summary");
                             String content = resultSet.getString("content");
                             String tags = resultSet.getString("tags");
-                            Date createTime = resultSet.getTime("create_time");
-                            Date updateTime = resultSet.getTime("update_time");
+                            Date createTime = resultSet.getTimestamp("create_time");
+                            Date updateTime = resultSet.getTimestamp("update_time");
 
                             objectMap.put("id", id);
                             objectMap.put("title", title);
@@ -98,6 +99,14 @@ public class ArticleServiceImpl implements ArticleService {
         pageInfo.setTotal(total);
         pageInfo.setList(list);
         return pageInfo;
+    }
+
+    @Override
+    public Article get(Long id) {
+        Base.open();
+        Article article = Article.findById(id);
+        Base.close();
+        return article;
     }
 
     private String count(String sql) {

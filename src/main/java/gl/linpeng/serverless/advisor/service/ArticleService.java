@@ -1,6 +1,7 @@
 package gl.linpeng.serverless.advisor.service;
 
 import gl.linpeng.gf.base.PageInfo;
+import gl.linpeng.serverless.advisor.model.Article;
 
 
 /**
@@ -19,4 +20,12 @@ public interface ArticleService {
      * @return articles
      */
     public PageInfo query(Long catalogId, Integer pageSize, Integer page);
+
+    /**
+     * get article by id
+     *
+     * @param id article id
+     * @return article object
+     */
+    Article get(Long id);
 }

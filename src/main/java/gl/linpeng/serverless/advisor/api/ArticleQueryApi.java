@@ -1,6 +1,7 @@
 package gl.linpeng.serverless.advisor.api;
 
 import gl.linpeng.gf.base.PageInfo;
+import gl.linpeng.serverless.advisor.model.Article;
 
 /**
  * Content domain api
@@ -18,4 +19,12 @@ public interface ArticleQueryApi {
      * @return news
      */
     PageInfo getNewsByCatalogId(Long parentCatalogId, Integer pageSize, Integer page);
+
+    /**
+     * get news by id
+     *
+     * @param id article id
+     * @return article object
+     */
+    Article getArticleById(Long id);
 }

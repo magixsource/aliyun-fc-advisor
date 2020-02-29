@@ -2,6 +2,7 @@ package gl.linpeng.serverless.advisor.api.impl;
 
 import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.serverless.advisor.api.ArticleQueryApi;
+import gl.linpeng.serverless.advisor.model.Article;
 import gl.linpeng.serverless.advisor.service.ArticleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,5 +28,11 @@ public class ArticleQueryApiImpl implements ArticleQueryApi {
         pageSize = pageSize == null ? 10 : pageSize;
         page = page == null ? 1 : page;
         return articleService.query(catalogId, pageSize, page);
+    }
+
+    @Override
+    public Article getArticleById(Long id) {
+        logger.info("get news by id {}", id);
+        return articleService.get(id);
     }
 }
