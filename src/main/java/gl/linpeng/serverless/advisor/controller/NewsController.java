@@ -9,9 +9,14 @@ import gl.linpeng.gf.base.ServerlessRequest;
 import gl.linpeng.gf.base.ServerlessResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.ArticleQueryApi;
+import gl.linpeng.serverless.advisor.api.HealthQueryApi;
+import gl.linpeng.serverless.advisor.api.OperationApi;
+import gl.linpeng.serverless.advisor.common.Constants;
 import gl.linpeng.serverless.advisor.controller.request.IdQueryRequest;
+import gl.linpeng.serverless.advisor.controller.request.OperationLogRequest;
 import gl.linpeng.serverless.advisor.inject.AdvisorModule;
 import gl.linpeng.serverless.advisor.model.Article;
+import gl.linpeng.serverless.advisor.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +34,10 @@ public class NewsController extends FunctionController<IdQueryRequest, Serverles
 
     @Inject
     private ArticleQueryApi articleQueryApi;
+    @Inject
+    private OperationApi operationApi;
+    @Inject
+    private HealthQueryApi healthQueryApi;
 
 
     @Override
@@ -53,6 +62,16 @@ public class NewsController extends FunctionController<IdQueryRequest, Serverles
 
         Long id = jsonDTO.getId();
         Article article = articleQueryApi.getArticleById(id);
+        if (jsonDTO.getOpenId() != null && jsonDTO.getOpenId().length() > 0) {
+            User user = healthQueryApi.getOrSaveUser(jsonDTO.getOpenId());
+            OperationLogRequest visitLog = new OperationLogRequest();
+            visitLog.setOperationType(Constants.OperationLogType.VISIT.getValue());
+            visitLog.setOperationTargetType(Constants.OperationLogTargetType.ARTICLE.getValue());
+            visitLog.setOperationTargetId(id);
+            visitLog.setOperationSourceType(Constants.OperationLogSourceType.HUMAN.getValue());
+            visitLog.setOperationSourceId(user.getLongId());
+            operationApi.saveOperationLog(visitLog);
+        }
         PayloadResponse payloadResponse = new PayloadResponse("success", article.toMap());
         return ServerlessResponse.builder().setObjectBody(payloadResponse).build();
     }
@@ -64,6 +83,12 @@ public class NewsController extends FunctionController<IdQueryRequest, Serverles
         // inject instance
         if (articleQueryApi == null) {
             articleQueryApi = injector.getInstance(ArticleQueryApi.class);
+        }
+        if (operationApi == null) {
+            operationApi = injector.getInstance(OperationApi.class);
+        }
+        if (healthQueryApi == null) {
+            healthQueryApi = injector.getInstance(HealthQueryApi.class);
         }
     }
 

@@ -33,7 +33,7 @@ public class OperationLogServiceImpl implements OperationLogService {
     public OperationLog saveOperationLog(OperationLogRequest operationLog) {
         Base.open();
         OperationLog log = new OperationLog();
-        log.set("operation_type", operationLog.getOperationType()).set("operation_target_type", operationLog.getOperationTargetType()).set("operation_target_id", operationLog.getOperationTargetId()).set("operation_time", new Date()).saveIt();
+        log.set("operation_source_type", operationLog.getOperationSourceType()).set("operation_source_id", operationLog.getOperationSourceId()).set("operation_type", operationLog.getOperationType()).set("operation_target_type", operationLog.getOperationTargetType()).set("operation_target_id", operationLog.getOperationTargetId()).set("operation_time", new Date()).saveIt();
         Base.close();
         return log;
     }
@@ -103,7 +103,7 @@ public class OperationLogServiceImpl implements OperationLogService {
             "operation_logs t," +
             "principles t2 " +
             "WHERE " +
-            "t2.disease_id = {diseaseId} "+
+            "t2.disease_id = {diseaseId} " +
             "AND t2.id = t.operation_target_id " +
             "AND t.operation_target_type = {targetType} " +
             "and t2.principleitem_id in ({ids}) " +

@@ -9,10 +9,13 @@ import gl.linpeng.gf.base.PayloadResponse;
 import gl.linpeng.gf.base.ServerlessRequest;
 import gl.linpeng.gf.base.ServerlessResponse;
 import gl.linpeng.gf.controller.FunctionController;
+import gl.linpeng.serverless.advisor.api.HealthQueryApi;
 import gl.linpeng.serverless.advisor.api.OperationApi;
+import gl.linpeng.serverless.advisor.common.Constants;
 import gl.linpeng.serverless.advisor.controller.request.OperationLogRequest;
 import gl.linpeng.serverless.advisor.inject.AdvisorModule;
 import gl.linpeng.serverless.advisor.model.OperationLog;
+import gl.linpeng.serverless.advisor.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +34,8 @@ public class OperationLogController extends FunctionController<OperationLogReque
 
     @Inject
     private OperationApi operationApi;
+    @Inject
+    private HealthQueryApi healthQueryApi;
 
     @Override
     public ServerlessResponse handleRequest(OperationLogRequest apiRequest, Context context) {
@@ -54,6 +59,12 @@ public class OperationLogController extends FunctionController<OperationLogReque
         initApplication();
 
         // save
+        int sourceType = jsonDTO.getOperationSourceType();
+        String openId = jsonDTO.getOpenId();
+        if (Constants.OperationLogSourceType.HUMAN.getValue() == sourceType && openId != null && openId.length() > 0) {
+            User user = healthQueryApi.getOrSaveUser(openId);
+            jsonDTO.setOperationSourceId(user.getLongId());
+        }
         OperationLog log = operationApi.saveOperationLog(jsonDTO);
         Map<String, Object> map = log.toMap();
         PayloadResponse payloadResponse = new PayloadResponse("success", map);
@@ -68,5 +79,9 @@ public class OperationLogController extends FunctionController<OperationLogReque
         if (operationApi == null) {
             operationApi = injector.getInstance(OperationApi.class);
         }
+        if (healthQueryApi == null) {
+            healthQueryApi = injector.getInstance(HealthQueryApi.class);
+        }
+
     }
 }
