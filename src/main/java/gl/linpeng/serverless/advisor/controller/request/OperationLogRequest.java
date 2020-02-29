@@ -1,5 +1,7 @@
 package gl.linpeng.serverless.advisor.controller.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -8,6 +10,7 @@ import javax.validation.constraints.NotNull;
  * @author lin.peng
  * @since 1.0
  **/
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OperationLogRequest {
 
     /**
@@ -27,6 +30,17 @@ public class OperationLogRequest {
 
     @NotNull
     private int operationTargetType;
+
+    /**
+     * 操作源id
+     */
+    private Long operationSourceId;
+    /**
+     * 操作源类型
+     */
+    private int operationSourceType;
+
+    private String openId;
 
     public int getOperationTargetType() {
         return operationTargetType;
@@ -58,5 +72,29 @@ public class OperationLogRequest {
 
     public void setOperationTargetId(Long operationTargetId) {
         this.operationTargetId = operationTargetId;
+    }
+
+    public Long getOperationSourceId() {
+        return operationSourceId;
+    }
+
+    public void setOperationSourceId(Long operationSourceId) {
+        this.operationSourceId = operationSourceId;
+    }
+
+    public int getOperationSourceType() {
+        return operationSourceType;
+    }
+
+    public void setOperationSourceType(int operationSourceType) {
+        this.operationSourceType = operationSourceType;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 }
