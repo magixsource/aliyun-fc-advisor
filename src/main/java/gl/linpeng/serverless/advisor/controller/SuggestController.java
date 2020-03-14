@@ -9,8 +9,6 @@ import gl.linpeng.gf.base.PageInfo;
 import gl.linpeng.gf.base.PayloadResponse;
 import gl.linpeng.gf.base.ServerlessRequest;
 import gl.linpeng.gf.base.ServerlessResponse;
-import gl.linpeng.gf.base.api.ApiRequest;
-import gl.linpeng.gf.base.api.ApiResponse;
 import gl.linpeng.gf.controller.FunctionController;
 import gl.linpeng.serverless.advisor.api.HealthQueryApi;
 import gl.linpeng.serverless.advisor.controller.request.BaseQueryRequest;
@@ -26,7 +24,7 @@ import javax.inject.Inject;
  * @author lin.peng
  * @since 1.0
  **/
-public class SuggestController extends FunctionController<BaseQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<ApiRequest, ApiResponse> {
+public class SuggestController extends FunctionController<BaseQueryRequest, ServerlessRequest, ServerlessResponse> implements PojoRequestHandler<BaseQueryRequest, ServerlessResponse> {
     private static final Logger logger = LoggerFactory.getLogger(SuggestController.class);
     private Injector injector;
 
@@ -34,13 +32,15 @@ public class SuggestController extends FunctionController<BaseQueryRequest, Serv
     private HealthQueryApi healthQueryApi;
 
     @Override
-    public ApiResponse handleRequest(ApiRequest apiRequest, Context context) {
+    public ServerlessResponse handleRequest(BaseQueryRequest apiRequest, Context context) {
         logger.debug("recieve api request {}", JSON.toJSONString(apiRequest));
         getFunction().getFunctionContext().put("ctx", context);
-        ServerlessRequest serverlessRequest = new ServerlessRequest(apiRequest);
+        // ServerlessRequest serverlessRequest = new ServerlessRequest(apiRequest);
+        ServerlessRequest serverlessRequest = new ServerlessRequest.Builder().setObjectBody(apiRequest).build();
         ServerlessResponse serverlessResponse = handler(serverlessRequest);
-        ApiResponse apiResponse = new ApiResponse(serverlessResponse);
-        return apiResponse;
+        return serverlessResponse;
+        // ApiResponse apiResponse = new ApiResponse(serverlessResponse);
+        // return apiResponse;
     }
 
     @Override
@@ -55,7 +55,10 @@ public class SuggestController extends FunctionController<BaseQueryRequest, Serv
         initApplication();
 
         String q = jsonDTO.getQ().trim();
-        PageInfo pageInfo = healthQueryApi.getQuerySuggests(q, 10, 1);
+        Integer pageSize = jsonDTO.getPageSize() == null ? 10 : jsonDTO.getPageSize();
+        Integer page = jsonDTO.getPage() == null ? 1 : jsonDTO.getPage();
+
+        PageInfo pageInfo = healthQueryApi.getQuerySuggests(q, pageSize, page);
 
         PayloadResponse response = new PayloadResponse("success", pageInfo.toMap());
         return ServerlessResponse.builder().setObjectBody(response).build();

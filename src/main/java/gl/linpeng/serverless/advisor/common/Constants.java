@@ -13,6 +13,33 @@ public final class Constants {
     public static final int COUNT_TYPE_PRICIPLE = 1;
     public static final int COUNT_TYPE_PRICIPLE_ITEM = 2;
 
+    public enum UserFeatureType {
+        DISEASE(1, "DISEASE"), FOOD(2, "FOOD"), INGREDIENT(3, "INGREDIENT"), TASTE(4, "TASTE"), COOKING(5, "COOKING");
+        public String name;
+        public Integer value;
+
+        UserFeatureType(Integer value, String name) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public void setValue(Integer value) {
+            this.value = value;
+        }
+    }
+
     public enum PrincipleItemType {
         FOOD(1, "FOOD"), NATRIENT(2, "NATRIENT");
 
@@ -79,6 +106,96 @@ public final class Constants {
                 return Adverb.LESS;
             }
             return null;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public void setValue(Integer value) {
+            this.value = value;
+        }
+
+    }
+
+    public enum OperationLogType {
+
+        DOWN(0, "DOWN"), UP(1, "UP"), VISIT(2, "VISIT"), SHARE(3, "SHARE");
+
+        public String name;
+        public Integer value;
+
+        OperationLogType(Integer value, String name) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public void setValue(Integer value) {
+            this.value = value;
+        }
+
+    }
+
+    public enum OperationLogTargetType {
+
+        PRINCIPLE(1, "PRINCIPLE"), ARTICLE(2, "ARTICLE"), FOOD(3, "FOOD");
+
+        public String name;
+        public Integer value;
+
+        OperationLogTargetType(Integer value, String name) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public void setValue(Integer value) {
+            this.value = value;
+        }
+
+    }
+
+    public enum OperationLogSourceType {
+
+        HUMAN(1, "HUMAN"), ARTICLE(2, "ARTICLE");
+
+        public String name;
+        public Integer value;
+
+        OperationLogSourceType(Integer value, String name) {
+            this.name = name;
+            this.value = value;
         }
 
         public String getName() {

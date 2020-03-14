@@ -1,6 +1,10 @@
 # aliyun-fc-advisor
 aliyun-fc-advisor
 
+# how to run
+1. add maven phase `org.javalite:activejdbc-instrumentation:2.0:instrument`
+2. run instrument before build
+3. run as serverless or springboot as you like
 
 # Advisor API
 ## 通用搜索
@@ -17,7 +21,7 @@ aliyun-fc-advisor
 		    "payload":{ // 响应消息主体
 		       list:[
 		        {"title":"苹果", // 名称
-				"type":"f",     // 类型：f:food,d:disease
+				"type":"i",     // 类型：f:food,d:disease,i:ingredient
 				"id":1111},     // 主键值
 				{"title":"感冒","type":"d","id":2222},
                 ...
@@ -50,7 +54,7 @@ aliyun-fc-advisor
 				list:[
 					{
 						"name":"苹果",
-						"type":"f",
+						"type":"i",
 						"id":1111,
 						"imgs":[
 							"http://example.com/cdn/f/apple.png?h=60&w=60",
@@ -201,5 +205,213 @@ aliyun-fc-advisor
 					"http://example.com/i/cough2.png?h=50&w=50",
 					"http://example.com/i/cough3.png?h=50&w=50"
 				]
+			}
+		}
+
+### 菜谱详情
+- 接口名：/api/v1/health/food
+- 请求方法：GET
+- 入参：
+	- id | Number | 主键
+- 请求示例： /api/v1/health/food?id=3
+- 响应
+
+
+		{
+			"message":"查询成功",
+			"payload":{
+				{
+                    "content":"<p>黄瓜切成片,小葱切段,西红柿切成适量大小。</p><p><img class='conimg' src='https://s1.st.meishij.net/rs/87/39/13384837/n13384837_154529331922255.jpg' alt=''></p> <p>. 将冷面汤充分搅拌后,放入冰箱中冷藏</p><p><img class='conimg' src='https://s1.st.meishij.net/rs/87/39/13384837/n13384837_154529335423696.jpg' alt=''></p> <p>在黄瓜和西红柿里倒入汤汁,搅拌均匀后,在食用前撒上葱末即可。</p><p><img class='conimg' src='https://s1.st.meishij.net/rs/87/39/13384837/n13384837_154529336621539.jpg' alt=''></p>",
+                    "create_time":1546741368000,
+                    "id":3,
+                    "name":"冷面的制作方法",
+                    "update_time":1546741368000
+                }
+			}
+		}
+
+### 菜谱构成详情
+- 接口名：/api/v1/health/foodMaterial
+- 请求方法：GET
+- 入参：
+	- id | Number | 主键
+- 请求示例： /api/v1/health/foodMaterial?id=3
+- 响应
+
+
+		{
+			"message":"查询成功",
+			"payload":{
+				"list":[
+                        {
+                            "kind":31,
+                            "origin":"",
+                            "name":"小葱",
+                            "id":891
+                        },
+                        {
+                            "kind":32,
+                            "origin":"",
+                            "name":"黄瓜（胡瓜）",
+                            "id":910
+                        },
+                        {
+                            "kind":83,
+                            "origin":"",
+                            "name":"白糖（绵白糖）",
+                            "id":1151
+                        },
+                        {
+                            "kind":82,
+                            "origin":"",
+                            "name":"醋",
+                            "id":1180
+                        },
+                        {
+                            "kind":82,
+                            "origin":"",
+                            "name":"盐",
+                            "id":1208
+                        },
+                        {
+                            "kind":0,
+                            "name":"西红柿",
+                            "id":1309
+                        },
+                        {
+                            "kind":0,
+                            "name":"冷水",
+                            "id":1310
+                        }
+                    ]
+			}
+		}
+
+### 菜谱查询
+- 接口名：/api/v1/health/foodQuery
+- 请求方法：GET
+- 入参：
+	- q | String | 名称
+- 请求示例： /api/v1/health/foodQuery?q=猪肉
+- 响应
+
+
+		{
+			"message":"查询成功",
+			"payload":{
+				"list":[
+                            {
+                                "content":"",
+                                "create_time":1546753399000,
+                                "id":9162,
+                                "name":"猪肉韭菜饺子",
+                                "summary":"半肥猪肉150克，韭菜100克，饺子皮20张，盐，胡椒粉，姜末，花生油少许，芝麻油几滴，陈醋，辣椒酱，生抽，酱油",
+                                "update_time":1546753399000
+                            },
+                            {
+                                "content":"<span>1</span><p>在一个大碗中混合绞肉/ 蒜头/ 辣椒/ 芫荽/ 面包粉/ 一半姜泥/ 五香粉/ 一半洋葱末/ 蛋/ 少许盐和黑胡椒，混合均匀后放在冰箱里备用。我提前三个小时完成让它入味些。</p>",
+                                "create_time":1546753947000,
+                                "id":10523,
+                                "name":"猪肉酿榅桲&石榴果实和香菜",
+                                "summary":"这道菜以水果入菜挺特殊，只是石榴籽有点麻烦，如果可以买到籽较小且果实较艳红的石榴品种会更加分。买不到榅桲，用甜椒或圆胖型茄子(非长条形)代替也都很不错。",
+                                "update_time":1546753947000
+                            }
+                        ],
+                        "page":1,
+                        "pageSize":10,
+                        "total":18
+			}
+		}
+
+
+### 菜谱标签查询
+- 接口名：/api/v1/health/foodTag
+- 请求方法：GET
+- 入参：
+	- id | Number | id
+- 请求示例： /api/v1/health/foodTag?id=3
+- 响应
+
+		{
+			"message":"查询成功",
+			"payload":{
+			    "list":[
+                        {
+                            "id":1,
+                            "title":"热菜"
+                        },
+                        {
+                            "id":2,
+                            "title":"家常菜"
+                        },
+                        {
+                            "id":3,
+                            "title":"凉菜"
+                        }
+                    ]
+			}
+		}
+		
+		
+### 原料菜谱查询
+- 接口名：/api/v1/health/ingredientFoodQuery
+- 请求方法：GET
+- 入参：
+	- id | Number | id
+- 请求示例： /api/v1/health/ingredientFoodQuery?id=3
+- 响应
+
+		{
+			"message":"查询成功",
+			"payload":{
+			    "list":[
+                        {
+                            "content":"xxxxxxxxxxxxxxxxxxxx",
+                            "name":"热菜",
+                            "id":1,
+                            "summary":"xxxxx"
+                        },
+                        {
+                            "id":2,
+                            "content":"xxxxxxxxxxxxxxxxxxxx",
+                            "name":"热菜",
+                            "summary":"xxxxx"
+                        }
+                    ],
+                    "page":1,
+                    "pageSize":10,
+                    "total":8
+			}
+		}
+		
+		
+### 标签菜谱查询
+- 接口名：/api/v1/health/tagFoodQuery
+- 请求方法：GET
+- 入参：
+	- q | String | 名称
+- 请求示例： /api/v1/health/tagFoodQuery?q=家常菜
+- 响应
+
+		{
+			"message":"查询成功",
+			"payload":{
+			    "list":[
+                        {
+                            "content":"xxxxxxxxxxxxxxxxxxxx",
+                            "name":"热菜",
+                            "id":1,
+                            "summary":"xxxxx"
+                        },
+                        {
+                            "id":2,
+                            "content":"xxxxxxxxxxxxxxxxxxxx",
+                            "name":"热菜",
+                            "summary":"xxxxx"
+                        }
+                    ],
+                    "page":1,
+                    "pageSize":10,
+                    "total":8
 			}
 		}

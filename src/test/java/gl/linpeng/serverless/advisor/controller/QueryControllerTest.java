@@ -24,7 +24,7 @@ public class QueryControllerTest {
 
     @Test
     public void testQueryByText() throws IOException {
-        String content = "{\"q\":\"病\",\"type\":\"d\"}";
+        String content = "{\"q\":\"感冒\",\"type\":\"d\",\"page\":\"2\"}";
         Context ctx = new Context() {
             @Override
             public String getRequestId() {

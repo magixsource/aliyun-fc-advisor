@@ -11,6 +11,9 @@ import org.javalite.activejdbc.Model;
 public class Disease extends Model {
 
     private String name;
+    private String summary;
+    private String department;
+    private String treatment;
 
     public Disease() {
     }
@@ -27,5 +30,27 @@ public class Disease extends Model {
         this.name = name;
     }
 
+    public String getSummary() {
+        return summary;
+    }
 
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getTreatment() {
+        return treatment;
+    }
+
+    public void setTreatment(String treatment) {
+        this.treatment = treatment;
+    }
 }
