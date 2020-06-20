@@ -74,7 +74,7 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
 
     @Override
     public PageInfo queryAdvises(Long[] ids, String type, String adviseType, Integer pageSize, Integer page) {
-        String dSql = "SELECT DISTINCT(t.id),t.adverb,t.type,t.target,t3.`name` as target_name,t2.id as principle_id,count(l.id) as cnt from principle_items t LEFT OUTER JOIN ingredients t3 on t.target = t3.id,principles t2 LEFT outer JOIN operation_logs l on l.operation_type = 1 and l.operation_target_type = 1 and l.operation_target_id = t2.id where t.id = t2.principleitem_id and t2.disease_id in ({diseaseId}) and t.adverb = {adverb} GROUP BY t.id,t.adverb,t.type,t.target,t3.`name`,t2.id order by count(l.id) DESC";
+        String dSql = "SELECT DISTINCT(t.id),t.adverb,t.type,t.target,t3.`name` as target_name,t3.image as image,t2.id as principle_id,count(l.id) as cnt from principle_items t LEFT OUTER JOIN ingredients t3 on t.target = t3.id,principles t2 LEFT outer JOIN operation_logs l on l.operation_type = 1 and l.operation_target_type = 1 and l.operation_target_id = t2.id where t.id = t2.principleitem_id and t2.disease_id in ({diseaseId}) and t.adverb = {adverb} GROUP BY t.id,t.adverb,t.type,t.target,t3.`name`,t2.id order by count(l.id) DESC";
         String iSql = "SELECT DISTINCT(t4.id) as target,t.id,t.adverb,t.type,t4.`name` as target_name,t3.id as principle_id,count(l.id) as cnt from principle_items t LEFT OUTER JOIN principles t3 LEFT outer JOIN operation_logs l on l.operation_type = 1 and l.operation_target_type = 1 and l.operation_target_id = t3.id LEFT OUTER JOIN diseases t4 on t3.disease_id = t4.id ON t3.principleitem_id = t.id,ingredients t2 where t.type = 1 and t.target = t2.id and t2.id in ({ingredientId}) and t.adverb = {adverb} GROUP BY t4.id,t.id,t.adverb,t.type,t4.`name`,t3.id order BY count(l.id) DESC";
         Integer adverb;
         if ("m".equalsIgnoreCase(adviseType)) {
@@ -123,9 +123,9 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
         }
         PreparedStatement preparedStatement;
         if (isDiseaseType) {
-            sql = sql.replace("{diseaseId}", StringUtils.joinArray(ids,","));
+            sql = sql.replace("{diseaseId}", StringUtils.joinArray(ids, ","));
         } else {
-            sql = sql.replace("{ingredientId}", StringUtils.joinArray(ids,","));
+            sql = sql.replace("{ingredientId}", StringUtils.joinArray(ids, ","));
         }
         sql = sql.replace("{adverb}", adverb.toString());
         String countSql = count(sql);
@@ -149,6 +149,7 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
                 Long principleId = resultSet.getLong("principle_id");
                 Long targetId = resultSet.getLong("target");
                 String targetName = resultSet.getString("target_name");
+                String image = resultSet.getString("image");
                 model.set("name", targetName);
                 Map map = model.toMap();
                 map.put("id", principleItemId);
@@ -156,6 +157,7 @@ public class HealthAdvisorServiceImpl implements HealthAdvisorService {
                 map.put("targetId", targetId);
                 map.put("principleId", principleId);
                 map.put("adverb", resultSet.getInt("adverb"));
+                map.put("image", image);
                 list.add(map);
             }
         }
