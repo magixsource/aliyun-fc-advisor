@@ -49,6 +49,7 @@ public class FoodMaterialServiceImpl implements FoodMaterialService {
                 objectMap.put("enName", rs.getString("en_name"));
                 objectMap.put("kind", rs.getInt("kind"));
                 objectMap.put("origin", rs.getString("origin"));
+                objectMap.put("image",rs.getString("image"));
                 list.add(objectMap);
             }
         } catch (SQLException e) {
