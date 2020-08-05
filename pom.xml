@@ -141,6 +141,16 @@
     <profiles>
         <profile>
             <id>geek</id>
+            <repositories>
+                <repository>
+                    <id>geek-snapshots</id>
+                    <name>Ali Private Snapshot Repository</name>
+                    <url>https://packages.aliyun.com/maven/repository/2012569-snapshot-C6Wvk0/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
             <distributionManagement>
                 <repository>
                     <id>geek-releases</id>
