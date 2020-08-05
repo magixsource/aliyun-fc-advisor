@@ -5,7 +5,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: 
+    branches:
       - master
       - feature*
   pull_request:
@@ -27,4 +27,4 @@ jobs:
       with:
         servers: '[{ "id": "geek-snapshots", "username": "${{ secrets.GEEK_REPO_USERNAME }}", "password": "${{ secrets.GEEK_REPO_SECRET }}" }]'
     - name: Deploy to aliyun
-      run: mvn -B deploy -P geek --file pom.xml
+      run: mvn -B org.javalite:activejdbc-instrumentation:2.0:instrument deploy -P geek --file pom.xml
